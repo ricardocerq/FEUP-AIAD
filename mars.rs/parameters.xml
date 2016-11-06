@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<parameters>
+	<parameter name="randomSeed" displayName="Default Random Seed"
+		type="int" defaultValue="__NULL__" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="mineralmaxvalue" displayName="mineral max value"
+		type="int" defaultValue="100" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="mineralminvalue" displayName="mineral min value"
+		type="int" defaultValue="1" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="runlength" displayName="run length" type="double"
+		defaultValue="400.0" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" />
+	<parameter name="initialnumberofbots" displayName="initial number of bots"
+		type="int" defaultValue="9" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="initialnumberofminerals" displayName="initial number of minerals"
+		type="int" defaultValue="50" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="xdim" displayName="xdim"
+		type="int" defaultValue="50" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="ydim" displayName="ydim"
+		type="int" defaultValue="50" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="numberofbases" displayName="number of bases"
+		type="int" defaultValue="1" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="maxinitialbotdistance" displayName="max initial bot distance"
+		type="int" defaultValue="10" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+</parameters>
+
+
