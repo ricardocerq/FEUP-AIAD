@@ -34,11 +34,9 @@ public class MyLauncher extends RepastSLauncher {
 
 	@Override
 	protected void launchJADE() {
-
 		Runtime rt = Runtime.instance();
 		Profile p1 = new ProfileImpl();
 		mainContainer = rt.createMainContainer(p1);
-
 		launchAgents();
 	}
 	private ArrayList<Agent> agents = new ArrayList<>();
@@ -49,7 +47,7 @@ public class MyLauncher extends RepastSLauncher {
 			for(Agent a : agents){
 				mainContainer.acceptNewAgent("Bot " + i++ , a).start();
 			}
-
+			
 			// ...
 
 		} catch (StaleProxyException e) {
@@ -60,6 +58,7 @@ public class MyLauncher extends RepastSLauncher {
 
 	@Override
 	public Context build(Context<Object> context) {
+		agents.clear();
 		Parameters p = RunEnvironment.getInstance().getParameters();
 		int xdim = (Integer)p.getValue("xdim");   // The x dimension of the physical space
 		int ydim = (Integer)p.getValue("ydim");   // The y dimension of the physical space
@@ -85,11 +84,14 @@ public class MyLauncher extends RepastSLauncher {
 		int numBots = (Integer)p.getValue("initialnumberofbots");
 		int numBases = (Integer)p.getValue("numberofbases");
 		int maxdist = (Integer)p.getValue("maxinitialbotdistance");
+		
 		for (int j = 0; j < numBases; j++) {
+			
 			float x1 = Utils.r.nextInt(xdim)+.5f;
 			float y1 = Utils.r.nextInt(ydim)+.5f;
 			
-			if(find(grid, (int)x1, (int)y1, Base.class).isEmpty()){
+			if(find(grid, (int)x1, (int)y1, Base.class).isEmpty()) {
+				
 				Base b = new Base();
 				context.add(b);
 				space.moveTo(b, x1, y1, 1);
@@ -100,9 +102,9 @@ public class MyLauncher extends RepastSLauncher {
 					context.add(bot);
 					float r = Utils.r.nextFloat()*(maxdist-1)+1;
 					r = 1;
-					double ang = ((float)i)/numBots*2*Math.PI;
-					float x2 = x1 + r*(float)Math.cos(ang);
-					float y2 = y1 + r*(float)Math.sin(ang);
+					double ang = ((double)i)/numBots*2*Math.PI;
+					double x2 = x1 + r*(double)Math.cos(ang);
+					double y2 = y1 + r*(double)Math.sin(ang);
 					agents.add(bot);
 					space.moveTo(bot, x2, y2, 1);
 					//grid.moveTo(bot, space.get, (int)y2);
@@ -111,6 +113,7 @@ public class MyLauncher extends RepastSLauncher {
 		}
 
 		int numminerals = Math.min((Integer)p.getValue("initialnumberofminerals"), xdim*ydim);
+		
 		for (int i = 0; i < numminerals; i++) {
 			int x1 = Utils.r.nextInt(xdim);
 			int y1 = Utils.r.nextInt(ydim);
@@ -119,7 +122,6 @@ public class MyLauncher extends RepastSLauncher {
 				context.add(m);
 				space.moveTo(m, x1+.5,y1+.5, 1);
 				//grid.moveTo(m, (int)(x1+.5),(int)(y1+.5));
-				
 			}
 			else i--;
 		}
@@ -127,10 +129,11 @@ public class MyLauncher extends RepastSLauncher {
 			NdPoint pt = space.getLocation(obj);
 			grid.moveTo(obj, (int) pt.getX(), (int) pt.getY());
 		}
-		if (RunEnvironment.getInstance().isBatch()){
+		if (RunEnvironment.getInstance().isBatch()) {
 
 			double endAt = (Double)p.getValue("runlength");     
 			RunEnvironment.getInstance().endAt(endAt);
+			
 		}
 		return super.build(context);
 	}

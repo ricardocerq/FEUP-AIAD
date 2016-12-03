@@ -1,6 +1,6 @@
 package mars;
 
-public class Base {
+public class Base extends Entity {
 	public Base(){
 		
 	}

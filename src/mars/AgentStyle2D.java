@@ -34,7 +34,7 @@ public class AgentStyle2D extends DefaultStyleOGL2D {
 		if (o instanceof Bot)
 			return 1f;
 		if (o instanceof Mineral)
-			return 1f;
+			return 0f;
 		if (o instanceof Base)
 			return 1f;
 		return 1f;

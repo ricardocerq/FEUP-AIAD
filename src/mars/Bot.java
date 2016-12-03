@@ -19,8 +19,12 @@ public class Bot extends Agent {
 	private double energy;       // The energy level of the agent
 	private double heading;      // The heading in degrees of the agent
 	private Base b;
+	private static int nextid = 1;
+	private int id;
 	public Bot(Base b){
 		this.b = b;
+		id = nextid++;
+		System.out.println("Bot " + id + " Created");
 	}
 	
 	// classe do behaviour
@@ -68,6 +72,7 @@ public class Bot extends Agent {
 
 	// Move the agent
 	public void move() {
+		System.out.println("Bot " + id + " moving");
 		// The agent is aware of its location in the continuous space and
 		// which mineral patch it is on
 
@@ -99,5 +104,5 @@ public class Bot extends Agent {
 		patch.moveTo(this, (int)x, (int)y);	
 	}
 
-}   // fim da classe PingPong
+}
 

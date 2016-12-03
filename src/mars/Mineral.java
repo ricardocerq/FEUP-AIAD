@@ -9,18 +9,14 @@ import repast.simphony.space.grid.Grid;
 import repast.simphony.util.ContextUtils;
 import repast.simphony.valueLayer.GridValueLayer;
 
-/**
- * The Mineral agent.
- * 
- * @author Eric Tatara 
- */
 public class Mineral {
 	private int countdown;   // coundown timer for mineral to re-grow
 	private boolean alive;   // boolean for mineral alive / dead
 	
 	private static final int ALIVE = 1;
 	private static final int DEAD = 0;
-	private static int MAX = 100;
+	private static final int MAX;
+	private static final int MIN;
 	public static int getMAX() {
 		return MAX;
 	}
@@ -28,7 +24,6 @@ public class Mineral {
 		return MIN;
 	}
 
-	private static int MIN = 1;
 	
 	static {
 		Parameters p = RunEnvironment.getInstance().getParameters();
