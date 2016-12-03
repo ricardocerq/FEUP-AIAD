@@ -62,7 +62,19 @@ public class MyLauncher extends RepastSLauncher {
 		Parameters p = RunEnvironment.getInstance().getParameters();
 		int xdim = (Integer)p.getValue("xdim");   // The x dimension of the physical space
 		int ydim = (Integer)p.getValue("ydim");   // The y dimension of the physical space
-
+		
+		int numBots = (Integer)p.getValue("initialnumberofbots");
+		int numBases = (Integer)p.getValue("numberofbases");
+		int maxdist = (Integer)p.getValue("maxinitialbotdistance");
+		
+		int numminerals = Math.min((Integer)p.getValue("initialnumberofminerals"), xdim*ydim);
+		
+		double maxspeed = (Double)p.getValue("maxspeed");
+		
+		Entity.setMaxWidth(xdim);
+		Entity.setMaxHeight(ydim);
+		
+		
 		Grid<Object> grid = GridFactoryFinder.createGridFactory(null).createGrid("Simple Grid", context,
 				new GridBuilderParameters<Object>(new repast.simphony.space.grid.WrapAroundBorders(),
 						new SimpleGridAdder<Object>(), true, xdim, ydim));
@@ -76,59 +88,39 @@ public class MyLauncher extends RepastSLauncher {
 
 		context.addValueLayer(depositField);
 		
-		GridValueLayer extractedField = new GridValueLayer("Extracted Field", true, 
-				new repast.simphony.space.grid.WrapAroundBorders(),xdim,ydim);
-
-		context.addValueLayer(extractedField);
-		
-		int numBots = (Integer)p.getValue("initialnumberofbots");
-		int numBases = (Integer)p.getValue("numberofbases");
-		int maxdist = (Integer)p.getValue("maxinitialbotdistance");
 		
 		for (int j = 0; j < numBases; j++) {
 			
-			float x1 = Utils.r.nextInt(xdim)+.5f;
-			float y1 = Utils.r.nextInt(ydim)+.5f;
+			double x1 = Utils.r.nextInt(xdim)+.5;
+			double y1 = Utils.r.nextInt(ydim)+.5;
 			
 			if(find(grid, (int)x1, (int)y1, Base.class).isEmpty()) {
 				
-				Base b = new Base();
-				context.add(b);
-				space.moveTo(b, x1, y1, 1);
-				//grid.moveTo(b, (int)x1, (int)y1);
+				Base b = new Base(context, space, grid, x1, y1);
 				
 				for (int i = 0; i < numBots; i++) {
-					Bot bot = new Bot(b);            
-					context.add(bot);
+					         
 					float r = Utils.r.nextFloat()*(maxdist-1)+1;
-					r = 1;
 					double ang = ((double)i)/numBots*2*Math.PI;
 					double x2 = x1 + r*(double)Math.cos(ang);
 					double y2 = y1 + r*(double)Math.sin(ang);
+					Bot bot = new Bot(context, space, grid, maxspeed, x2, y2, b);   
 					agents.add(bot);
-					space.moveTo(bot, x2, y2, 1);
-					//grid.moveTo(bot, space.get, (int)y2);
 				}
 			} else j--;
 		}
 
-		int numminerals = Math.min((Integer)p.getValue("initialnumberofminerals"), xdim*ydim);
+		
 		
 		for (int i = 0; i < numminerals; i++) {
 			int x1 = Utils.r.nextInt(xdim);
 			int y1 = Utils.r.nextInt(ydim);
-			if(depositField.get(x1,y1) == 0){
-				Mineral m = new Mineral(depositField, extractedField, x1, y1);
-				context.add(m);
-				space.moveTo(m, x1+.5,y1+.5, 1);
-				//grid.moveTo(m, (int)(x1+.5),(int)(y1+.5));
+			if(find(grid, (int)x1, (int)y1, Mineral.class).isEmpty()) {
+				Mineral m = new Mineral(context, space, grid, x1 + .5, y1 + .5);
 			}
 			else i--;
 		}
-		for (Object obj : context) {
-			NdPoint pt = space.getLocation(obj);
-			grid.moveTo(obj, (int) pt.getX(), (int) pt.getY());
-		}
+		
 		if (RunEnvironment.getInstance().isBatch()) {
 
 			double endAt = (Double)p.getValue("runlength");     
@@ -137,12 +129,12 @@ public class MyLauncher extends RepastSLauncher {
 		}
 		return super.build(context);
 	}
-	public <T> List<Class<T>> find(Grid<Object> grid, int x, int y, Class<T> c){
+	public List<Object> find(Grid<Object> grid, int x, int y, Class c){
 		Iterable<Object> it = grid.getObjectsAt(x,y);
-		List<Class<T>> list = new LinkedList<>();
+		List<Object> list = new LinkedList<>();
 		for(Object obj: it){
 			if(obj.getClass().equals(c))
-				list.add((Class<T>)obj);
+				list.add(obj);
 		}
 		return list;
 	}

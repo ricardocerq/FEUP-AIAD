@@ -22,8 +22,9 @@ public class AgentStyle2D extends DefaultStyleOGL2D {
 	public Color getColor(Object o){
 		if (o instanceof Bot)
 			return Color.WHITE;
-		if (o instanceof Mineral)
-			return Color.BLUE;
+		if (o instanceof Mineral){
+			return new Color(Color.GREEN.getRed()/255f,Color.GREEN.getGreen()/255f, Color.GREEN.getBlue()/255f , ((Mineral)o).mineralAmount());
+		}
 		if(o instanceof Base)
 			return Color.CYAN;
 		return null;
@@ -34,16 +35,16 @@ public class AgentStyle2D extends DefaultStyleOGL2D {
 		if (o instanceof Bot)
 			return 1f;
 		if (o instanceof Mineral)
-			return 0f;
+			return 1f;
 		if (o instanceof Base)
 			return 1f;
 		return 1f;
 	}
-	/*@Override
+	@Override
 	public VSpatial getVSpatial(Object agent, VSpatial spatial){
 		//if(agent instanceof Mineral)
 			//spatial.translate(10, 0, 0);
-		VSpatial ret = shapeFactory.createCircle(4, 16);
+		/*VSpatial ret = shapeFactory.createCircle(4, 16);
 		if(agent instanceof Bot){
 			System.out.println("1");
 			ret = shapeFactory.createCircle(4, 16);
@@ -54,6 +55,13 @@ public class AgentStyle2D extends DefaultStyleOGL2D {
 			ret.rotate2D((float)Math.PI/4);
 		}
 			
+		return ret;*/
+		VSpatial ret = spatial;
+		if(agent instanceof Mineral){
+			ret = shapeFactory.createRectangle(10, 10);
+		} else {
+			ret = shapeFactory.createCircle(4, 16);
+		}
 		return ret;
-	}*/
+	}
 }

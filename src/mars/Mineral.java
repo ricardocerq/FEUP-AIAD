@@ -2,14 +2,11 @@ package mars;
 
 import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunEnvironment;
-import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.parameter.Parameters;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.grid.Grid;
-import repast.simphony.util.ContextUtils;
-import repast.simphony.valueLayer.GridValueLayer;
 
-public class Mineral {
+public class Mineral extends Entity{
 	private int countdown;   // coundown timer for mineral to re-grow
 	private boolean alive;   // boolean for mineral alive / dead
 	
@@ -17,13 +14,15 @@ public class Mineral {
 	private static final int DEAD = 0;
 	private static final int MAX;
 	private static final int MIN;
+	public float mineralAmount(){
+		return ((float)(this.deposit - MIN))/(MAX-MIN);
+	}
 	public static int getMAX() {
 		return MAX;
 	}
 	public static int getMIN() {
 		return MIN;
 	}
-
 	
 	static {
 		Parameters p = RunEnvironment.getInstance().getParameters();
@@ -33,15 +32,11 @@ public class Mineral {
 	
 	private double deposit;
 	private double mined;
-	private GridValueLayer depositField;
-	private GridValueLayer extractedField;
 	
-	public Mineral(GridValueLayer depositField, GridValueLayer extractedField, int x1, int y1){
+	public Mineral(Context<Object> context, ContinuousSpace<Object> cs, Grid<Object> grid, double x, double y){
+		super(context, cs, grid, 0, x, y);
 		deposit = Utils.r.nextDouble()*(MAX-MIN)+MIN;
 		mined = 0;
-		depositField.set(deposit, x1,y1);
-		this.depositField = depositField;
-		this.extractedField = extractedField;
 	}
 	
 	public static int getNewMineralValue(){

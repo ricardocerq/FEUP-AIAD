@@ -2,5 +2,4 @@
 	<projection id="Simple Grid" type="grid" />
 	<projection id="Continuous Space" type="continuous space" />
   	<projection id="Mineral Field" type="value layer" />
-  	<projection id="Extracted Field" type="value layer" />
 </context>

@@ -30,6 +30,9 @@
 	<parameter name="maxinitialbotdistance" displayName="max initial bot distance"
 		type="int" defaultValue="10" isReadOnly="false"
 		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="maxspeed" displayName="max bot speed"
+		type="double" defaultValue=".1" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" />
 </parameters>
 
 
