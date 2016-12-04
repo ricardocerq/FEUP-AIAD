@@ -23,6 +23,7 @@ public abstract class Entity extends Agent {
 	private double targetx;
 	private double targety;
 	private double heading;
+	private double nextheading;
 	private Context<Object> context;
 	private ContinuousSpace<Object> cs;
 	private Grid<Object> grid;
@@ -120,6 +121,7 @@ public abstract class Entity extends Agent {
 		doWrapAround();
 		x = targetx;
 		y = targety;
+		heading = nextheading;
 		this.onMove(dist);
 	}
 	
@@ -134,7 +136,23 @@ public abstract class Entity extends Agent {
 			targety = targety >= maxHeight ? maxHeight : targety;
 		}
 	}
-
+	
+	public void moveRandomTo(double dx, double dy, double maxRange){
+		double ang;
+		double sgn = Math.random() - 0.5;
+		if (sgn > 0)
+			ang = heading + Math.random()*50;
+		else
+			ang = heading - Math.random()*50;
+		double rx = Math.cos(ang) * maxRange;
+		double ry = Math.sin(ang) * maxRange;
+		
+		double fx = rx + dx;
+		double fy = ry + dy;
+		
+		moveTo(x+fx,y+fy,maxRange);
+	}
+	
 	public void moveTo(double xf, double yf, double maxRange) {
 		
 		double distance = dist(x, y, xf, yf);
@@ -174,7 +192,7 @@ public abstract class Entity extends Agent {
 		double finalDistance = distance;
 		targetx = x + Math.cos(rad) * finalDistance;
 		targety = y + Math.sin(rad) * finalDistance;
-		heading = rad;
+		nextheading = rad;
 	}
 	
 	public void repastSync(){
@@ -185,7 +203,7 @@ public abstract class Entity extends Agent {
 	public List<Entity> getCloseBy(double radius, Class c){
 		List<Entity> ret = new ArrayList<>();
 		for(Entity e: entities){
-			if(e.getClass().equals(c)){
+			if(e.getClass().equals(c) && e != this){
 				double distance = dist(this.x, this.y, e.x, e.y);
 				if(distance < radius){
 					ret.add(e);

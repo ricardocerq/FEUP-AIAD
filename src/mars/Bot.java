@@ -93,19 +93,19 @@ public class Bot extends Entity {
 					}
 				);
 				System.out.println(closest.getX() + " "  + closest.getY());
-				if(dist(closest) > 25){
-					System.out.println("Moving closer");
-					//moveTo(closest.getX(), closest.getY(), maxRange());
+				System.out.println("dist: " + dist(closest));
+				if(dist(closest) > 100){
+					moveRandomTo(closest.getX()-getX(), closest.getY()-getY(), maxRange());
+				} else if(dist(closest) < 10) {
+					moveRandomTo(getX()-closest.getX(), getY()-closest.getY(), maxRange());
 				} else {
-					System.out.println("Moving farther");
-					//moveTo(closest.getX(), closest.getY(), maxRange());
+					moveRandom(maxRange());
 				}
 			}
 			else {
-				
+				moveRandom(maxRange());
 			}
 			
-			moveRandom(maxRange());
 			//moveTo(Entity.getMaxWidth()/2, Entity.getMaxHeight()/2, maxRange());
 		}
 	}
