@@ -39,7 +39,9 @@ public class MyLauncher extends RepastSLauncher {
 		mainContainer = rt.createMainContainer(p1);
 		launchAgents();
 	}
+	
 	private ArrayList<Agent> agents = new ArrayList<>();
+	
 	private void launchAgents() {
 
 		try {
@@ -109,8 +111,6 @@ public class MyLauncher extends RepastSLauncher {
 				}
 			} else j--;
 		}
-
-		
 		
 		for (int i = 0; i < numminerals; i++) {
 			int x1 = Utils.r.nextInt(xdim);
@@ -122,10 +122,8 @@ public class MyLauncher extends RepastSLauncher {
 		}
 		
 		if (RunEnvironment.getInstance().isBatch()) {
-
 			double endAt = (Double)p.getValue("runlength");     
 			RunEnvironment.getInstance().endAt(endAt);
-			
 		}
 		return super.build(context);
 	}
