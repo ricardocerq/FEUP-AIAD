@@ -1,16 +1,13 @@
-package mars;
+package styling;
 
 import java.awt.Color;
 
+import mars.Mineral;
 import repast.simphony.valueLayer.ValueLayer;
 import repast.simphony.visualizationOGL2D.ValueLayerStyleOGL;
 
-/**
- * Style for Mineral value layer in 2D display.
- * 
- * @author Eric Tatara
- */
-public abstract class Style2D implements ValueLayerStyleOGL {
+
+public class GroundStyle2D implements ValueLayerStyleOGL {
 
 	protected ValueLayer layer;
 	private Color ground = new Color(205, 133, 63);
@@ -36,5 +33,7 @@ public abstract class Style2D implements ValueLayerStyleOGL {
 		}
 		return new Color(emp[0],emp[1], emp[2]);
 	}
-	public abstract Color mainColor();
+	public Color mainColor() {
+		return Color.GREEN;
+	}
 }

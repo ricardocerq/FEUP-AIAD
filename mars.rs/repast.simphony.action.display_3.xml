@@ -1,5 +1,5 @@
 <repast.simphony.visualization.engine.CartesianDisplayDescriptor>
-  <name>Deposit Display</name>
+  <name>Extracted Display</name>
   <type>2D</type>
   <styles>
     <entry>
@@ -12,7 +12,7 @@
     </entry>
     <entry>
       <string>mars.Mineral</string>
-      <string>styling.DepositEntityStyle2D</string>
+      <string>styling.ExtractedEntityStyle2D</string>
     </entry>
   </styles>
   <editedStyles>
@@ -47,11 +47,11 @@
   <layerOrder>
     <entry>
       <string>mars.Bot</string>
-      <int>2</int>
+      <int>0</int>
     </entry>
     <entry>
       <string>mars.Base</string>
-      <int>0</int>
+      <int>2</int>
     </entry>
     <entry>
       <string>mars.Mineral</string>
@@ -59,6 +59,11 @@
     </entry>
   </layerOrder>
   <projections>
+    <repast.simphony.scenario.data.ProjectionData>
+      <id>Simple Grid</id>
+      <attributes/>
+      <type>grid</type>
+    </repast.simphony.scenario.data.ProjectionData>
     <repast.simphony.scenario.data.ProjectionData>
       <id>Continuous Space</id>
       <attributes/>
@@ -72,10 +77,35 @@
     <entry>
       <string>Continuous Space</string>
       <repast.simphony.visualization.continuous.ContinuousProjectionDescriptor>
-        <proj reference="../../../../projections/repast.simphony.scenario.data.ProjectionData"/>
+        <proj reference="../../../../projections/repast.simphony.scenario.data.ProjectionData[2]"/>
         <props>
           <entry>
             <string>repast.simphony.visualization.continuous.ContinuousDecorator</string>
+            <map>
+              <entry>
+                <string>COLOR</string>
+                <int>-1</int>
+              </entry>
+              <entry>
+                <string>UNIT_SIZE</string>
+                <float>15.0</float>
+              </entry>
+              <entry>
+                <string>SHOW</string>
+                <boolean>true</boolean>
+              </entry>
+            </map>
+          </entry>
+        </props>
+      </repast.simphony.visualization.continuous.ContinuousProjectionDescriptor>
+    </entry>
+    <entry>
+      <string>Simple Grid</string>
+      <repast.simphony.visualization.grid.GridProjectionDescriptor>
+        <proj reference="../../../../projections/repast.simphony.scenario.data.ProjectionData"/>
+        <props>
+          <entry>
+            <string>repast.simphony.visualization.grid.GridDecorator</string>
             <map>
               <entry>
                 <string>COLOR</string>
@@ -87,12 +117,12 @@
               </entry>
               <entry>
                 <string>SHOW</string>
-                <boolean>false</boolean>
+                <boolean>true</boolean>
               </entry>
             </map>
           </entry>
         </props>
-      </repast.simphony.visualization.continuous.ContinuousProjectionDescriptor>
+      </repast.simphony.visualization.grid.GridProjectionDescriptor>
     </entry>
   </projectionDescriptors>
   <props/>

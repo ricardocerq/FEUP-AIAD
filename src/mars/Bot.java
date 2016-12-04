@@ -2,13 +2,9 @@ package mars;
 
 import sajas.core.Agent;
 import sajas.core.behaviours.CyclicBehaviour;
-import jade.lang.acl.ACLMessage;
 import repast.simphony.context.Context;
-import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.space.continuous.ContinuousSpace;
-import repast.simphony.space.continuous.NdPoint;
 import repast.simphony.space.grid.Grid;
-import repast.simphony.util.ContextUtils;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import sajas.domain.DFService;
@@ -16,6 +12,16 @@ import jade.domain.FIPAException;
 
 // classe do agente
 public class Bot extends Entity {
+	private static double maxEnergy;
+	
+	public static double getMaxEnergy() {
+		return maxEnergy;
+	}
+
+	public static void setMaxEnergy(double maxEnergy) {
+		Bot.maxEnergy = maxEnergy;
+	}
+	
 	private double energy;       // The energy level of the agent
 	private double heading;      // The heading in degrees of the agent
 	private Base b;
@@ -26,19 +32,17 @@ public class Bot extends Entity {
 		this.b = b;
 		id = nextid++;
 		System.out.println("Bot " + id + " Created");
+		energy = Bot.maxEnergy;
+		
 	}
 	
-	class BotBehaviour extends CyclicBehaviour {
-		private int n = 0;
-
-		public BotBehaviour(Agent a) {
+	class WanderBehaviour extends CyclicBehaviour {
+		public WanderBehaviour(Agent a) {
 			super(a);
 		}
-
 		public void action() {
-			moveRandom();
+			moveRandom(Math.max(0,Math.min(energy, getMaxspeed())));
 		}
-
 	}
 	
 	protected void setup() {
@@ -54,7 +58,7 @@ public class Bot extends Entity {
 			e.printStackTrace();
 		}
 
-		BotBehaviour b = new BotBehaviour(this);
+		WanderBehaviour b = new WanderBehaviour(this);
 		addBehaviour(b);
 	}   
 	
@@ -64,6 +68,13 @@ public class Bot extends Entity {
 		} catch(FIPAException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	protected void onMove(double dist) {
+		energy -= dist;
+		if (energy < 0)
+			energy = 0;
 	}
 
 }

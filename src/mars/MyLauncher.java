@@ -61,6 +61,7 @@ public class MyLauncher extends RepastSLauncher {
 	@Override
 	public Context build(Context<Object> context) {
 		agents.clear();
+		Entity.clearEntities();
 		Parameters p = RunEnvironment.getInstance().getParameters();
 		int xdim = (Integer)p.getValue("xdim");   // The x dimension of the physical space
 		int ydim = (Integer)p.getValue("ydim");   // The y dimension of the physical space
@@ -72,6 +73,11 @@ public class MyLauncher extends RepastSLauncher {
 		int numminerals = Math.min((Integer)p.getValue("initialnumberofminerals"), xdim*ydim);
 		
 		double maxspeed = (Double)p.getValue("maxspeed");
+		
+		double maxenergy = (Double)p.getValue("maxenergy");
+		
+		Bot.setMaxEnergy(maxenergy);
+		
 		
 		Entity.setMaxWidth(xdim);
 		Entity.setMaxHeight(ydim);
@@ -93,8 +99,8 @@ public class MyLauncher extends RepastSLauncher {
 		
 		for (int j = 0; j < numBases; j++) {
 			
-			double x1 = Utils.r.nextInt(xdim)+.5;
-			double y1 = Utils.r.nextInt(ydim)+.5;
+			double x1 = Utils.r.nextInt(xdim - 2*maxdist - 2) + maxdist + 1 +.5;
+			double y1 = Utils.r.nextInt(ydim - 2*maxdist - 2)+ maxdist + 1+.5;
 			
 			if(find(grid, (int)x1, (int)y1, Base.class).isEmpty()) {
 				

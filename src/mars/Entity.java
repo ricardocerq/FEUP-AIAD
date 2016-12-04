@@ -1,32 +1,39 @@
 package mars;
 
 
-import sajas.core.Agent;
+import java.util.ArrayList;
+import java.util.List;
+
 import repast.simphony.context.Context;
-import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.schedule.ScheduledMethod;
-import repast.simphony.parameter.Parameters;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.grid.Grid;
+import sajas.core.Agent;
 
-public class Entity extends Agent {
-	
+public abstract class Entity extends Agent {
+	private static List<Entity> entities = new ArrayList<Entity>();
 	private static int maxWidth;
 	private static int maxHeight;
 	private static double entityMaxSpeed;
 	
-	private static boolean wrapAround = true;
+	private static boolean wrapAround = false;
 	private double x;
 	private double y;
 	private double maxspeed;
 	private double targetx;
 	private double targety;
 	private double heading;
+	private Context<Object> context;
 	private ContinuousSpace<Object> cs;
 	private Grid<Object> grid;
 	
+	public static void clearEntities(){
+		entities.clear();
+	}
+	
 	public Entity(Context<Object> context, ContinuousSpace<Object> cs, Grid<Object> grid, double maxspeed, double x, double y){
 		context.add(this);
+		this.context = context;
 		this.cs = cs;
 		this.grid = grid;
 		this.maxspeed = maxspeed;
@@ -35,6 +42,7 @@ public class Entity extends Agent {
 		this.targetx = x;
 		this.targety = y;
 		repastSync();
+		entities.add(this);
 	}
 	public Entity(Context<Object> context,ContinuousSpace<Object> cs, Grid<Object> grid, double maxspeed){
 		this(context, cs, grid, maxspeed, Math.random()*maxWidth, Math.random()*maxHeight);
@@ -103,38 +111,48 @@ public class Entity extends Agent {
 	}
 	
 	public void commitMove(){
+		double dist = Math.sqrt(Math.pow(x-targetx, 2)+Math.pow(y-targety, 2));
 		doWrapAround();
 		x = targetx;
 		y = targety;
+		this.onMove(dist);
 	}
 	
 	private void doWrapAround() {
 		if(wrapAround){
 			targetx %= maxWidth;
 			targety %= maxHeight;
+		} else {
+			targetx = targetx < 0 ? 0 : targetx;
+			targety = targety < 0 ? 0 : targety;
+			targetx = targetx >= maxWidth ? maxWidth : targetx;
+			targety = targety >= maxHeight ? maxHeight : targety;
 		}
 	}
 
-	public void moveTo(double xf, double yf) {
+	public void moveTo(double xf, double yf, double maxRange) {
 		double ang = Math.atan2(yf-y, xf-x);
 		
 		double distance = Math.sqrt(Math.pow(yf, 2) + Math.pow(y, 2));
-		moveAng(ang, distance);
+		
+		double toMove = Math.min(maxRange, distance);
+		
+		moveAng(ang, toMove);
 		
 	}
 	
-	public void moveRandom(){
+	public void moveRandom(double maxRange){
 		double ang;
 		double sgn = Math.random() - 0.5;
 		if (sgn > 0)
 			ang = heading + Math.random()*50;
 		else
 			ang = heading - Math.random()*50;
-		moveAng(ang, maxspeed);
+		moveAng(ang, maxRange);
 	}
 	
 	public void moveAng(double rad, double distance) {
-		double finalDistance = Math.min(maxspeed, distance);
+		double finalDistance = distance;
 		targetx = x + Math.sin(rad) * finalDistance;
 		targety = y + Math.cos(rad) * finalDistance;
 		heading = rad;
@@ -144,4 +162,20 @@ public class Entity extends Agent {
 		cs.moveTo(this, x, y, 1);
 		grid.moveTo(this, (int) x, (int) y);
 	}
+	
+	public List<Entity> getCloseBy(double radius, Class c){
+		List<Entity> ret = new ArrayList<>();
+		for(Entity e: entities){
+			if(e.getClass().equals(c)){
+				double distance = Math.sqrt(Math.pow(this.x-e.x, 2) + Math.pow(this.y-e.y, 2));
+				if(distance < radius){
+					ret.add(e);
+				}
+			}
+		}
+		return ret;
+	}
+	
+	protected abstract void onMove(double dist);
+	
 }

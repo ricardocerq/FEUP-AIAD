@@ -31,15 +31,28 @@ public class Mineral extends Entity{
 	}
 	
 	private double deposit;
-	private double mined;
+	private double scanned;
+	private double extracted;
 	
 	public Mineral(Context<Object> context, ContinuousSpace<Object> cs, Grid<Object> grid, double x, double y){
 		super(context, cs, grid, 0, x, y);
 		deposit = Utils.r.nextDouble()*(MAX-MIN)+MIN;
-		mined = 0;
+		extracted = 0;
 	}
 	
 	public static int getNewMineralValue(){
 		return Utils.r.nextInt(MAX-MIN)+MIN;
+	}
+	public float depositAmount() {
+		return ((float)(this.deposit))/(MAX);
+	}
+	public float scannedAmount() {
+		return ((float)(this.scanned))/(MAX);
+	}
+	public float extractedAmount() {
+		return ((float)(this.extracted))/(MAX);
+	}
+	@Override
+	protected void onMove(double dist) {
 	}
 }
