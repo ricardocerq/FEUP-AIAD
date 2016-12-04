@@ -78,6 +78,14 @@ public class MyLauncher extends RepastSLauncher {
 		
 		Bot.setMaxEnergy(maxenergy);
 		
+		double rechargeRate = (Double)p.getValue("rechargerate");
+		
+		Bot.setRechargeRate(rechargeRate);
+		
+		double commRange = (Double)p.getValue("commrange");
+		
+		Bot.setCommRange(commRange);
+		
 		
 		Entity.setMaxWidth(xdim);
 		Entity.setMaxHeight(ydim);

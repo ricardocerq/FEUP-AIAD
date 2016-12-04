@@ -55,4 +55,8 @@ public class Mineral extends Entity{
 	@Override
 	protected void onMove(double dist) {
 	}
+	@Override
+	public double maxRange() {
+		return 0;
+	}
 }

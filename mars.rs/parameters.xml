@@ -36,6 +36,12 @@
 	<parameter name="maxenergy" displayName="max bot energy"
 		type="double" defaultValue="100" isReadOnly="false"
 		converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" />
+	<parameter name="rechargerate" displayName="bot recharge rate"
+		type="double" defaultValue="1" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" />
+	<parameter name="commrange" displayName="bot communication range"
+		type="double" defaultValue="100" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" />
 </parameters>
 
 

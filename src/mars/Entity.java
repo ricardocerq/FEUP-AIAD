@@ -107,11 +107,16 @@ public abstract class Entity extends Agent {
 	@ScheduledMethod(start = 1, interval = 1)
 	public void stepRepast(){
 		commitMove();
+		commitActions();
 		repastSync();
 	}
 	
+	private void commitActions() {
+		//for(EntityAction e : )
+	}
+
 	public void commitMove(){
-		double dist = Math.sqrt(Math.pow(x-targetx, 2)+Math.pow(y-targety, 2));
+		double dist = dist(x, y, targetx, targety);
 		doWrapAround();
 		x = targetx;
 		y = targety;
@@ -131,14 +136,28 @@ public abstract class Entity extends Agent {
 	}
 
 	public void moveTo(double xf, double yf, double maxRange) {
-		double ang = Math.atan2(yf-y, xf-x);
 		
-		double distance = Math.sqrt(Math.pow(yf, 2) + Math.pow(y, 2));
+		double distance = dist(x, y, xf, yf);
 		
-		double toMove = Math.min(maxRange, distance);
+		double toMove = Math.max(0, Math.min(maxRange, distance));
 		
-		moveAng(ang, toMove);
+		moveAng(angleTo(xf, yf), toMove);
 		
+	}
+	
+	public void moveAway(double xf, double yf, double maxRange) {
+		
+		double distance = dist(x, y, xf, yf);
+		
+		double toMove = Math.max(0, Math.min(maxRange, distance));
+		
+		moveAng(angleTo(xf, yf)+Math.PI/2, toMove);
+		
+	}
+	
+	
+	public double angleTo(double xf, double yf){
+		return Math.atan2(yf-y, xf-x);
 	}
 	
 	public void moveRandom(double maxRange){
@@ -153,8 +172,8 @@ public abstract class Entity extends Agent {
 	
 	public void moveAng(double rad, double distance) {
 		double finalDistance = distance;
-		targetx = x + Math.sin(rad) * finalDistance;
-		targety = y + Math.cos(rad) * finalDistance;
+		targetx = x + Math.cos(rad) * finalDistance;
+		targety = y + Math.sin(rad) * finalDistance;
 		heading = rad;
 	}
 	
@@ -167,7 +186,7 @@ public abstract class Entity extends Agent {
 		List<Entity> ret = new ArrayList<>();
 		for(Entity e: entities){
 			if(e.getClass().equals(c)){
-				double distance = Math.sqrt(Math.pow(this.x-e.x, 2) + Math.pow(this.y-e.y, 2));
+				double distance = dist(this.x, this.y, e.x, e.y);
 				if(distance < radius){
 					ret.add(e);
 				}
@@ -178,4 +197,13 @@ public abstract class Entity extends Agent {
 	
 	protected abstract void onMove(double dist);
 	
+	public abstract double maxRange();
+	
+	public static double dist(double x1, double y1, double x2, double y2){
+		return  Math.sqrt(Math.pow(y1-y2, 2) + Math.pow(x1-x2, 2));
+	}
+	
+	public double dist(Entity e){
+		return dist(this.x, this.y, e.x, e.y);
+	}
 }

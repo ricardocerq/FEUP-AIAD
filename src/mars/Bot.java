@@ -1,18 +1,24 @@
 package mars;
 
-import sajas.core.Agent;
-import sajas.core.behaviours.CyclicBehaviour;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import jade.domain.FIPAException;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
 import repast.simphony.context.Context;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.grid.Grid;
-import jade.domain.FIPAAgentManagement.ServiceDescription;
-import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import sajas.core.behaviours.FSMBehaviour;
+import sajas.core.behaviours.SimpleBehaviour;
 import sajas.domain.DFService;
-import jade.domain.FIPAException;
 
 // classe do agente
 public class Bot extends Entity {
 	private static double maxEnergy;
+	private static double rechargeRate;
+	private static double commRange;
 	
 	public static double getMaxEnergy() {
 		return maxEnergy;
@@ -20,6 +26,22 @@ public class Bot extends Entity {
 
 	public static void setMaxEnergy(double maxEnergy) {
 		Bot.maxEnergy = maxEnergy;
+	}
+	
+	public static double getRechargeRate() {
+		return rechargeRate;
+	}
+
+	public static void setRechargeRate(double rechargeRate) {
+		Bot.rechargeRate = rechargeRate;
+	}
+	
+	public static double getCommRange() {
+		return commRange;
+	}
+
+	public static void setCommRange(double commRange) {
+		Bot.commRange = commRange;
 	}
 	
 	private double energy;       // The energy level of the agent
@@ -35,13 +57,83 @@ public class Bot extends Entity {
 		energy = Bot.maxEnergy;
 		
 	}
+	private static final int OUT_OF_ENERGY = 1;
+	private static final int RECHARGED = 2;
 	
-	class WanderBehaviour extends CyclicBehaviour {
-		public WanderBehaviour(Agent a) {
-			super(a);
+	abstract class InterruptableBehaviour extends SimpleBehaviour {
+		int retval = -1;
+		@Override
+		public int onEnd() {
+			int ret = retval;
+			retval = -1;
+			return ret;
 		}
+		@Override
+		public boolean done() {
+			boolean ret = retval != -1;
+			return ret;
+		}
+	}
+	
+	class WanderBehaviour extends InterruptableBehaviour {
 		public void action() {
-			moveRandom(Math.max(0,Math.min(energy, getMaxspeed())));
+			//System.out.println("WanderBehaviour executing");
+			System.out.println(energy);
+			if(dist(b) > energy - maxRange()){
+				retval = OUT_OF_ENERGY;
+				return;
+			}
+			List<Entity> closeBy = getCloseBy(commRange, Bot.class);
+			if(!closeBy.isEmpty()){
+				Bot closest = (Bot) Collections.min(closeBy, new Comparator<Entity>(){
+						@Override
+						public int compare(Entity arg0, Entity arg1) {
+							return Double.compare(dist(arg0), dist(arg1));
+						}
+					}
+				);
+				System.out.println(closest.getX() + " "  + closest.getY());
+				if(dist(closest) > 25){
+					System.out.println("Moving closer");
+					//moveTo(closest.getX(), closest.getY(), maxRange());
+				} else {
+					System.out.println("Moving farther");
+					//moveTo(closest.getX(), closest.getY(), maxRange());
+				}
+			}
+			else {
+				
+			}
+			
+			moveRandom(maxRange());
+			//moveTo(Entity.getMaxWidth()/2, Entity.getMaxHeight()/2, maxRange());
+		}
+	}
+	
+	class RechargeBehaviour extends InterruptableBehaviour {
+		public void action() {
+			System.out.println("RechargeBehaviour executing");
+			
+			if(Utils.aproxSame(energy, maxEnergy)){
+				System.out.println("recharge finished");
+				retval = RECHARGED;
+				return;
+			}
+			System.out.print("energy " + energy); System.out.println("  dist " + dist(b));
+			if(Utils.aproxZero(dist(b))){
+				recharge();
+			} else {
+				System.out.println("moving back");
+				moveTo(b.getX(), b.getY(), maxRange());
+			}
+			
+		}
+	}
+	
+	class FinalBehaviour extends InterruptableBehaviour {
+		public void action() {
+			System.out.println("FinalBehaviour executing");
+			moveTo(b.getX(), b.getY(), maxRange());
 		}
 	}
 	
@@ -58,8 +150,15 @@ public class Bot extends Entity {
 			e.printStackTrace();
 		}
 
-		WanderBehaviour b = new WanderBehaviour(this);
-		addBehaviour(b);
+		//WanderBehaviour b = new WanderBehaviour(this);
+		FSMBehaviour bb = new FSMBehaviour(this);
+		
+		bb.registerFirstState(new WanderBehaviour(), "Wander");
+		bb.registerState(new RechargeBehaviour(), "Recharge");
+		bb.registerLastState(new FinalBehaviour(), "Final");
+		bb.registerTransition("Wander", "Recharge", OUT_OF_ENERGY);
+		bb.registerTransition("Recharge", "Wander", RECHARGED);
+		addBehaviour(bb);
 	}   
 	
 	protected void takeDown() {
@@ -77,5 +176,15 @@ public class Bot extends Entity {
 			energy = 0;
 	}
 
+	@Override
+	public double maxRange() {
+		return Math.max(0,Math.min(energy, getMaxspeed()));
+	}
+	
+	public void recharge(){
+		System.out.println("Recharging " + energy + " to " + energy + rechargeRate);
+		energy += rechargeRate;
+		energy = energy > maxEnergy ? maxEnergy: energy;
+	}
 }
 
