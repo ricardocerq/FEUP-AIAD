@@ -42,6 +42,15 @@
 	<parameter name="commrange" displayName="bot communication range"
 		type="double" defaultValue="100" isReadOnly="false"
 		converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" />
+	<parameter name="detectionrange" displayName="bot detection range"
+		type="double" defaultValue="5" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" />
+	<parameter name="interactionrange" displayName="bot interaction range"
+		type="double" defaultValue="1" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" />
+	<parameter name="passivedischarge" displayName="bot passive discharge"
+		type="double" defaultValue=".005" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" />
 </parameters>
 
 

@@ -12,10 +12,16 @@ import sajas.core.Agent;
 
 public abstract class Entity extends Agent {
 	private static List<Entity> entities = new ArrayList<Entity>();
-	private static int maxWidth;
-	private static int maxHeight;
-	private static double entityMaxSpeed;
 	
+	
+	
+	public double getMaxspeed() {
+		return maxspeed;
+	}
+	
+	public void setMaxspeed(double maxspeed) {
+		this.maxspeed = maxspeed;
+	}
 	private static boolean wrapAround = false;
 	private double x;
 	private double y;
@@ -46,23 +52,7 @@ public abstract class Entity extends Agent {
 		entities.add(this);
 	}
 	public Entity(Context<Object> context,ContinuousSpace<Object> cs, Grid<Object> grid, double maxspeed){
-		this(context, cs, grid, maxspeed, Math.random()*maxWidth, Math.random()*maxHeight);
-	}
-	
-	public static int getMaxWidth() {
-		return maxWidth;
-	}
-	
-	public static void setMaxWidth(int maxWidth) {
-		Entity.maxWidth = maxWidth;
-	}
-	
-	public static int getMaxHeight() {
-		return maxHeight;
-	}
-	
-	public static void setMaxHeight(int maxHeight) {
-		Entity.maxHeight = maxHeight;
+		this(context, cs, grid, maxspeed, Math.random()*EntityGlobals.getMaxWidth(), Math.random()*EntityGlobals.getMaxHeight());
 	}
 	
 	public double getX() {
@@ -81,13 +71,7 @@ public abstract class Entity extends Agent {
 		this.y = y;
 	}
 	
-	public double getMaxspeed() {
-		return maxspeed;
-	}
 	
-	public void setMaxspeed(double maxspeed) {
-		this.maxspeed = maxspeed;
-	}
 	
 	public double getTargetx() {
 		return targetx;
@@ -127,23 +111,28 @@ public abstract class Entity extends Agent {
 	
 	private void doWrapAround() {
 		if(wrapAround){
-			targetx %= maxWidth;
-			targety %= maxHeight;
+			targetx %= EntityGlobals.getMaxWidth();
+			targety %= EntityGlobals.getMaxHeight();
 		} else {
-			targetx = targetx < 0 ? 0 : targetx;
-			targety = targety < 0 ? 0 : targety;
-			targetx = targetx >= maxWidth ? maxWidth : targetx;
-			targety = targety >= maxHeight ? maxHeight : targety;
+			targetx = targetx < 0 ? 0.001 : targetx;
+			targety = targety < 0 ? 0.001 : targety;
+			targetx = targetx >= EntityGlobals.getMaxWidth() ? EntityGlobals.getMaxWidth()-.001 : targetx;
+			targety = targety >= EntityGlobals.getMaxHeight() ? EntityGlobals.getMaxHeight()-.001 : targety;
 		}
 	}
 	
-	public void moveRandomTo(double dx, double dy, double maxRange){
+	private double randomTurn(){
 		double ang;
 		double sgn = Math.random() - 0.5;
 		if (sgn > 0)
-			ang = heading + Math.random()*50;
+			ang = heading + Math.random()*Math.PI/8;
 		else
-			ang = heading - Math.random()*50;
+			ang = heading - Math.random()*Math.PI/8;
+		return ang;
+	}
+	
+	public void moveRandomTo(double dx, double dy, double maxRange){
+		double ang = randomTurn();
 		double rx = Math.cos(ang) * maxRange;
 		double ry = Math.sin(ang) * maxRange;
 		
@@ -179,12 +168,7 @@ public abstract class Entity extends Agent {
 	}
 	
 	public void moveRandom(double maxRange){
-		double ang;
-		double sgn = Math.random() - 0.5;
-		if (sgn > 0)
-			ang = heading + Math.random()*50;
-		else
-			ang = heading - Math.random()*50;
+		double ang = randomTurn();
 		moveAng(ang, maxRange);
 	}
 	

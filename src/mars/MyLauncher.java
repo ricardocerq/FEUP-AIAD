@@ -76,19 +76,31 @@ public class MyLauncher extends RepastSLauncher {
 		
 		double maxenergy = (Double)p.getValue("maxenergy");
 		
-		Bot.setMaxEnergy(maxenergy);
+		EntityGlobals.setMaxEnergy(maxenergy);
 		
 		double rechargeRate = (Double)p.getValue("rechargerate");
 		
-		Bot.setRechargeRate(rechargeRate);
+		EntityGlobals.setRechargeRate(rechargeRate);
 		
 		double commRange = (Double)p.getValue("commrange");
 		
-		Bot.setCommRange(commRange);
+		EntityGlobals.setCommRange(commRange);
+		
+		double detectionRange = (Double)p.getValue("detectionrange");
+		
+		EntityGlobals.setDetectionRange(detectionRange);
+		
+		double interactionRange = (Double)p.getValue("interactionrange");
+		
+		EntityGlobals.setInteractionRange(interactionRange);
+		
+		double passiveDischarge = (Double)p.getValue("passivedischarge");
+		
+		EntityGlobals.setPassiveDischarge(passiveDischarge);
 		
 		
-		Entity.setMaxWidth(xdim);
-		Entity.setMaxHeight(ydim);
+		EntityGlobals.setMaxWidth(xdim);
+		EntityGlobals.setMaxHeight(ydim);
 		
 		
 		Grid<Object> grid = GridFactoryFinder.createGridFactory(null).createGrid("Simple Grid", context,

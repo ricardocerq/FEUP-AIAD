@@ -1,5 +1,6 @@
 package mars;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -16,37 +17,12 @@ import sajas.domain.DFService;
 
 // classe do agente
 public class Bot extends Entity {
-	private static double maxEnergy;
-	private static double rechargeRate;
-	private static double commRange;
 	
-	public static double getMaxEnergy() {
-		return maxEnergy;
-	}
-
-	public static void setMaxEnergy(double maxEnergy) {
-		Bot.maxEnergy = maxEnergy;
-	}
-	
-	public static double getRechargeRate() {
-		return rechargeRate;
-	}
-
-	public static void setRechargeRate(double rechargeRate) {
-		Bot.rechargeRate = rechargeRate;
-	}
-	
-	public static double getCommRange() {
-		return commRange;
-	}
-
-	public static void setCommRange(double commRange) {
-		Bot.commRange = commRange;
-	}
 	
 	private double energy;       // The energy level of the agent
 	private double heading;      // The heading in degrees of the agent
 	private Base b;
+	private List<Mineral> planned = new ArrayList<>();
 	private static int nextid = 1;
 	private int id;
 	public Bot(Context<Object> context, ContinuousSpace<Object> cs, Grid<Object> grid, double maxspeed, double x, double y, Base b){
@@ -54,11 +30,12 @@ public class Bot extends Entity {
 		this.b = b;
 		id = nextid++;
 		System.out.println("Bot " + id + " Created");
-		energy = Bot.maxEnergy;
+		energy = EntityGlobals.getMaxEnergy();
 		
 	}
 	private static final int OUT_OF_ENERGY = 1;
 	private static final int RECHARGED = 2;
+	private static final int FOUND_MINERAL = 3;
 	
 	abstract class InterruptableBehaviour extends SimpleBehaviour {
 		int retval = -1;
@@ -75,28 +52,48 @@ public class Bot extends Entity {
 		}
 	}
 	
-	class WanderBehaviour extends InterruptableBehaviour {
+	class PowerConsumingBehaviour extends InterruptableBehaviour {
 		public void action() {
-			//System.out.println("WanderBehaviour executing");
-			System.out.println(energy);
 			if(dist(b) > energy - maxRange()){
 				retval = OUT_OF_ENERGY;
 				return;
 			}
-			List<Entity> closeBy = getCloseBy(commRange, Bot.class);
-			if(!closeBy.isEmpty()){
-				Bot closest = (Bot) Collections.min(closeBy, new Comparator<Entity>(){
+		}
+	}
+	
+	class WanderBehaviour extends PowerConsumingBehaviour {
+		public void action() {
+			super.action();
+			if(retval != -1)
+				return;
+			
+			List<Entity> mineralsCloseBy = getCloseBy(EntityGlobals.getDetectionRange(), Mineral.class);
+			Collections.sort(mineralsCloseBy, new Comparator<Entity>(){
+						@Override
+						public int compare(Entity arg0, Entity arg1) {
+							return Double.compare(dist(arg0), dist(arg1));
+						}
+			});
+			while(!mineralsCloseBy.isEmpty()){
+				if(canInteract((Mineral)(mineralsCloseBy.get(0)))){
+					
+					
+				} else {
+					mineralsCloseBy.remove(0);
+				}
+			}
+			List<Entity> entitiesCloseBy = getCloseBy(EntityGlobals.getCommRange(), Bot.class);
+			if(!entitiesCloseBy.isEmpty()){
+				Bot closest = (Bot) Collections.min(entitiesCloseBy, new Comparator<Entity>(){
 						@Override
 						public int compare(Entity arg0, Entity arg1) {
 							return Double.compare(dist(arg0), dist(arg1));
 						}
 					}
 				);
-				System.out.println(closest.getX() + " "  + closest.getY());
-				System.out.println("dist: " + dist(closest));
-				if(dist(closest) > 100){
+				if(dist(closest) > dist(0, 0, EntityGlobals.getMaxWidth(), EntityGlobals.getMaxWidth()) / 2){
 					moveRandomTo(closest.getX()-getX(), closest.getY()-getY(), maxRange());
-				} else if(dist(closest) < 10) {
+				} else if(dist(closest) < 5) {
 					moveRandomTo(getX()-closest.getX(), getY()-closest.getY(), maxRange());
 				} else {
 					moveRandom(maxRange());
@@ -114,16 +111,13 @@ public class Bot extends Entity {
 		public void action() {
 			System.out.println("RechargeBehaviour executing");
 			
-			if(Utils.aproxSame(energy, maxEnergy)){
-				System.out.println("recharge finished");
+			if(Utils.aproxSame(energy, EntityGlobals.getMaxEnergy())){
 				retval = RECHARGED;
 				return;
 			}
-			System.out.print("energy " + energy); System.out.println("  dist " + dist(b));
 			if(Utils.aproxZero(dist(b))){
 				recharge();
 			} else {
-				System.out.println("moving back");
 				moveTo(b.getX(), b.getY(), maxRange());
 			}
 			
@@ -161,6 +155,10 @@ public class Bot extends Entity {
 		addBehaviour(bb);
 	}   
 	
+	public boolean canInteract(Mineral min) {
+		return false;
+	}
+
 	protected void takeDown() {
 		try {
 			DFService.deregister(this);  
@@ -182,9 +180,9 @@ public class Bot extends Entity {
 	}
 	
 	public void recharge(){
-		System.out.println("Recharging " + energy + " to " + energy + rechargeRate);
-		energy += rechargeRate;
-		energy = energy > maxEnergy ? maxEnergy: energy;
+		energy +=  EntityGlobals.getRechargeRate();
+		energy = energy >  EntityGlobals.getMaxEnergy() ?  EntityGlobals.getMaxEnergy(): energy;
 	}
+	
 }
 
