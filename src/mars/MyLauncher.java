@@ -80,7 +80,17 @@ public class MyLauncher extends RepastSLauncher {
 		
 		int numminerals = Math.min((Integer)p.getValue("initialnumberofminerals"), xdim*ydim);
 		
+		int minMineralValue = (Integer)p.getValue("minmineralvalue");
+		
+		EntityGlobals.setMinMineralValue(minMineralValue);
+		
+		int maxMineralValue = (Integer)p.getValue("maxmineralvalue");
+		
+		EntityGlobals.setMaxMineralValue(maxMineralValue);
+		
 		double maxspeed = (Double)p.getValue("maxspeed");
+		
+		EntityGlobals.setEntityMaxSpeed(maxspeed);
 		
 		double maxenergy = (Double)p.getValue("maxenergy");
 		
@@ -106,7 +116,25 @@ public class MyLauncher extends RepastSLauncher {
 		
 		EntityGlobals.setPassiveDischarge(passiveDischarge);
 		
+		int scanSpeed = (Integer)p.getValue("scanspeed");
 		
+		EntityGlobals.setScanSpeed(scanSpeed);
+		
+		int extractionSpeed = (Integer)p.getValue("extractionspeed");
+		
+		EntityGlobals.setExtractionSpeed(extractionSpeed);
+		
+		int gatherSpeed = (Integer)p.getValue("gatherspeed");
+		
+		EntityGlobals.setGatherSpeed(gatherSpeed);
+		
+		int unloadSpeed = (Integer)p.getValue("unloadspeed");
+		
+		EntityGlobals.setUnloadSpeed(unloadSpeed);
+		
+		int maxCapacity = (Integer)p.getValue("maxcapacity");
+		
+		EntityGlobals.setMaxCapacity(maxCapacity);
 		
 		
 		Grid<Object> grid = GridFactoryFinder.createGridFactory(null).createGrid("Simple Grid", context,

@@ -2,7 +2,7 @@ package styling;
 
 import java.awt.Color;
 
-import mars.Mineral;
+import mars.EntityGlobals;
 import repast.simphony.valueLayer.ValueLayer;
 import repast.simphony.visualizationOGL2D.ValueLayerStyleOGL;
 
@@ -31,7 +31,7 @@ public abstract class Style2D implements ValueLayerStyleOGL {
 		double v = layer.get(coordinates);
 		float[] min = mainColor().getRGBColorComponents(null);
 		float[] emp = ground.getRGBColorComponents(null);
-		float alpha = ((float)v - Mineral.getMIN()) / (float)(Mineral.getMAX()-Mineral.getMIN());
+		float alpha = ((float)v - EntityGlobals.getMinMineralValue()) / (float)(EntityGlobals.getMaxMineralValue()-EntityGlobals.getMinMineralValue());
 		for(int i = 0; i < emp.length; i++){
 			emp[i] = emp[i]*(1-alpha) + min[i]*(alpha); 
 		}

@@ -7,26 +7,7 @@ import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.grid.Grid;
 
 public class Mineral extends Entity{
-	private int countdown;   // coundown timer for mineral to re-grow
-	private boolean alive;   // boolean for mineral alive / dead
-	
-	private static final int ALIVE = 1;
-	private static final int DEAD = 0;
-	private static final int MAX;
-	private static final int MIN;
-	
-	public static int getMAX() {
-		return MAX;
-	}
-	public static int getMIN() {
-		return MIN;
-	}
-	
-	static {
-		Parameters p = RunEnvironment.getInstance().getParameters();
-		MAX = (Integer)p.getValue("mineralmaxvalue");
-		MIN = (Integer)p.getValue("mineralminvalue");
-	}
+
 	
 	private int deposit;
 	private int scanned;
@@ -34,25 +15,26 @@ public class Mineral extends Entity{
 	
 	public Mineral(Context<Object> context, ContinuousSpace<Object> cs, Grid<Object> grid, double x, double y){
 		super(context, cs, grid, 0, x, y);
-		deposit = Utils.r.nextInt(MAX-MIN)+MIN;
+		deposit = Utils.r.nextInt(EntityGlobals.getMaxMineralValue()-EntityGlobals.getMinMineralValue())+EntityGlobals.getMinMineralValue();
+		System.out.println(deposit);
 		scanned = 0;
 		extracted = 0;
 	}
 	
 	public static int getNewMineralValue(){
-		return Utils.r.nextInt(MAX-MIN)+MIN;
+		return Utils.r.nextInt(EntityGlobals.getMaxMineralValue()-EntityGlobals.getMinMineralValue())+EntityGlobals.getMinMineralValue();
 	}
 	
 	public float depositAmount() {
-		return ((float)(this.deposit))/(MAX);
+		return ((float)(this.deposit))/(EntityGlobals.getMaxMineralValue());
 	}
 	
 	public float scannedAmount() {
-		return ((float)(this.scanned))/(MAX);
+		return ((float)(this.scanned))/(EntityGlobals.getMaxMineralValue());
 	}
 	
 	public float extractedAmount() {
-		return ((float)(this.extracted))/(MAX);
+		return ((float)(this.extracted))/(EntityGlobals.getMaxMineralValue());
 	}
 	
 	@Override
@@ -77,9 +59,11 @@ public class Mineral extends Entity{
 	}
 	
 	public int scan(int amount){
+		
 		int actual = Math.max(0, Math.min(amount, deposit));
 		deposit -= actual;
 		scanned += actual;
+		
 		return actual;
 	}
 	
@@ -90,7 +74,7 @@ public class Mineral extends Entity{
 		return actual;
 	}
 	
-	public int take(int amount){
+	public int gather(int amount){
 		int actual = Math.max(0, Math.min(amount, extracted));
 		extracted -= actual;
 		return actual;

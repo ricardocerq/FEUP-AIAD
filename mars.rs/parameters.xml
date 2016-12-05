@@ -3,10 +3,10 @@
 	<parameter name="randomSeed" displayName="Default Random Seed"
 		type="int" defaultValue="__NULL__" isReadOnly="false"
 		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
-	<parameter name="mineralmaxvalue" displayName="mineral max value"
+	<parameter name="maxmineralvalue" displayName="mineral max value"
 		type="int" defaultValue="100" isReadOnly="false"
 		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
-	<parameter name="mineralminvalue" displayName="mineral min value"
+	<parameter name="minmineralvalue" displayName="mineral min value"
 		type="int" defaultValue="1" isReadOnly="false"
 		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
 	<parameter name="runlength" displayName="run length" type="double"
@@ -57,6 +57,21 @@
 	<parameter name="passivedischarge" displayName="bot passive discharge"
 		type="double" defaultValue=".005" isReadOnly="false"
 		converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" />
+	<parameter name="scanspeed" displayName="bot scan speed"
+		type="int" defaultValue="1" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="extractionspeed" displayName="bot extraction speed"
+		type="int" defaultValue="1" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="gatherspeed" displayName="bot gather speed"
+		type="int" defaultValue="1" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="unloadspeed" displayName="bot unload speed"
+		type="int" defaultValue="1" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="maxcapacity" displayName="bot max capacity"
+		type="int" defaultValue="10" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
 </parameters>
 
 

@@ -125,9 +125,9 @@ public abstract class Entity extends Agent {
 		double ang;
 		double sgn = Math.random() - 0.5;
 		if (sgn > 0)
-			ang = heading + Math.random()*Math.PI/8;
+			ang = heading + Math.random()*Math.PI/16;
 		else
-			ang = heading - Math.random()*Math.PI/8;
+			ang = heading - Math.random()*Math.PI/16;
 		return ang;
 	}
 	

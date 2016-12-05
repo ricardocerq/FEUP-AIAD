@@ -126,6 +126,10 @@ public abstract class Bot extends Entity {
 				interact(m);
 				if(canInteract(m) <= 0){
 					planned.remove(m);
+					if(backToBase()){
+						retval = OUT_OF_ENERGY;
+						return;
+					}
 				}
 			} else {
 				moveTo(m.getX(), m.getY(), maxRange());
@@ -135,12 +139,12 @@ public abstract class Bot extends Entity {
 	class RechargeBehaviour extends InterruptableBehaviour {
 		public void action() {
 			
-			if(Utils.aproxSame(energy, EntityGlobals.getMaxEnergy())){
+			if(leaveBase(true)){
 				retval = RECHARGED;
 				return;
 			}
 			if(Utils.aproxZero(dist(b))){
-				recharge();
+				atBaseAction(b);
 			} else {
 				moveTo(b.getX(), b.getY(), maxRange());
 			}
@@ -176,15 +180,28 @@ public abstract class Bot extends Entity {
 		bb.registerLastState(new FinalBehaviour(), "Final");
 		
 		bb.registerTransition("Wander", "Recharge", OUT_OF_ENERGY);
+		bb.registerTransition("Execute", "Recharge", OUT_OF_ENERGY);
 		bb.registerTransition("Recharge", "Wander", RECHARGED);
 		bb.registerTransition("Wander", "Execute", FOUND_MINERAL);
 		bb.registerTransition("Execute", "Wander", NO_PLAN);
 		addBehaviour(bb);
 	}   
 	
-	public abstract int interact(Mineral m);
+	protected boolean backToBase(){
+		return dist(b) > energy - maxRange();
+	}
 
-	public abstract int canInteract(Mineral min);
+	protected int interact(Mineral m){
+		int ret = canInteract(m);
+		if(ret == 0)
+			return 0;
+		this.energy-=EntityGlobals.getPassiveDischarge();
+		if (energy < 0)
+			energy = 0;
+		return ret;
+	}
+
+	protected abstract int canInteract(Mineral min);
 
 	protected void takeDown() {
 		try {
@@ -206,14 +223,21 @@ public abstract class Bot extends Entity {
 		return Math.max(0,Math.min(energy, getMaxspeed()));
 	}
 	
-	public void recharge(){
+	protected void recharge(){
 		energy +=  EntityGlobals.getRechargeRate();
-		energy = energy >  EntityGlobals.getMaxEnergy() ?  EntityGlobals.getMaxEnergy(): energy;
+		energy = energy >  EntityGlobals.getMaxEnergy() ?  EntityGlobals.getMaxEnergy() : energy;
 	}
 
 	public double getEnergy() {
 		return energy;
 	}
 	
+	protected boolean leaveBase(boolean recharging){
+		return Utils.aproxSame(energy, EntityGlobals.getMaxEnergy());
+	}
+	
+	protected void atBaseAction(Base b){
+		recharge();
+	}
 }
 

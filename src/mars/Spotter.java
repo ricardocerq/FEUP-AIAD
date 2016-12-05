@@ -12,13 +12,15 @@ public class Spotter extends Bot{
 	}
 
 	@Override
-	public int canInteract(Mineral min) {
+	protected int canInteract(Mineral min) {
 		return min.getScannable();
 	}
 
 	@Override
-	public int interact(Mineral m) {
-		return 0;
+	protected int interact(Mineral m) {
+		if(super.interact(m) == 0)
+			return 0;
+		return m.scan(EntityGlobals.getScanSpeed());
 	}
 
 }
