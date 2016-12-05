@@ -66,7 +66,15 @@ public class MyLauncher extends RepastSLauncher {
 		int xdim = (Integer)p.getValue("xdim");   // The x dimension of the physical space
 		int ydim = (Integer)p.getValue("ydim");   // The y dimension of the physical space
 		
-		int numBots = (Integer)p.getValue("initialnumberofbots");
+		EntityGlobals.setMaxWidth(xdim);
+		EntityGlobals.setMaxHeight(ydim);
+		
+		int numSpotters = (Integer)p.getValue("numspotters");
+		int numProducers = (Integer)p.getValue("numproducers");
+		int numTransporters = (Integer)p.getValue("numtransporters");
+		
+		int numBots = numSpotters + numProducers + numTransporters;
+		
 		int numBases = (Integer)p.getValue("numberofbases");
 		int maxdist = (Integer)p.getValue("maxinitialbotdistance");
 		
@@ -99,8 +107,6 @@ public class MyLauncher extends RepastSLauncher {
 		EntityGlobals.setPassiveDischarge(passiveDischarge);
 		
 		
-		EntityGlobals.setMaxWidth(xdim);
-		EntityGlobals.setMaxHeight(ydim);
 		
 		
 		Grid<Object> grid = GridFactoryFinder.createGridFactory(null).createGrid("Simple Grid", context,
@@ -132,7 +138,15 @@ public class MyLauncher extends RepastSLauncher {
 					double ang = ((double)i)/numBots*2*Math.PI;
 					double x2 = x1 + r*(double)Math.cos(ang);
 					double y2 = y1 + r*(double)Math.sin(ang);
-					Bot bot = new Bot(context, space, grid, maxspeed, x2, y2, b);   
+					
+					Bot bot;
+					
+					if(i < numSpotters)
+						bot = new Spotter(context, space, grid, maxspeed, x2, y2, b);   
+					else if (i < numSpotters + numProducers)
+						bot = new Producer(context, space, grid, maxspeed, x2, y2, b);
+					else bot = new Transporter(context, space, grid, maxspeed, x2, y2, b);  
+					
 					agents.add(bot);
 				}
 			} else j--;

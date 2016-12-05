@@ -12,8 +12,14 @@
 	<parameter name="runlength" displayName="run length" type="double"
 		defaultValue="400.0" isReadOnly="false"
 		converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" />
-	<parameter name="initialnumberofbots" displayName="initial number of bots"
-		type="int" defaultValue="9" isReadOnly="false"
+	<parameter name="numspotters" displayName="initial number of spotters"
+		type="int" defaultValue="3" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="numproducers" displayName="initial number of producers"
+		type="int" defaultValue="3" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="numtransporters" displayName="initial number of transporters"
+		type="int" defaultValue="3" isReadOnly="false"
 		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
 	<parameter name="initialnumberofminerals" displayName="initial number of minerals"
 		type="int" defaultValue="50" isReadOnly="false"

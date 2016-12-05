@@ -8,7 +8,7 @@ public class DepositEntityStyle2D extends MineralEntityStyle2D {
 
 	@Override
 	protected Color mineralColor() {
-		return Color.RED;
+		return Color.BLUE;
 	}
 
 	@Override

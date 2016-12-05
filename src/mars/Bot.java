@@ -16,7 +16,7 @@ import sajas.core.behaviours.SimpleBehaviour;
 import sajas.domain.DFService;
 
 // classe do agente
-public class Bot extends Entity {
+public abstract class Bot extends Entity {
 	
 	
 	private double energy;       // The energy level of the agent
@@ -36,6 +36,7 @@ public class Bot extends Entity {
 	private static final int OUT_OF_ENERGY = 1;
 	private static final int RECHARGED = 2;
 	private static final int FOUND_MINERAL = 3;
+	private static final int NO_PLAN = 4;
 	
 	abstract class InterruptableBehaviour extends SimpleBehaviour {
 		int retval = -1;
@@ -66,7 +67,10 @@ public class Bot extends Entity {
 			super.action();
 			if(retval != -1)
 				return;
-			
+			if(!planned.isEmpty()){
+				retval = FOUND_MINERAL;
+				return;
+			}
 			List<Entity> mineralsCloseBy = getCloseBy(EntityGlobals.getDetectionRange(), Mineral.class);
 			Collections.sort(mineralsCloseBy, new Comparator<Entity>(){
 						@Override
@@ -75,9 +79,11 @@ public class Bot extends Entity {
 						}
 			});
 			while(!mineralsCloseBy.isEmpty()){
-				if(canInteract((Mineral)(mineralsCloseBy.get(0)))){
-					
-					
+				Mineral m = (Mineral) mineralsCloseBy.get(0);
+				if(canInteract(m) > 0){
+					planned.add(m);
+					retval = FOUND_MINERAL;
+					return;
 				} else {
 					mineralsCloseBy.remove(0);
 				}
@@ -106,10 +112,28 @@ public class Bot extends Entity {
 			//moveTo(Entity.getMaxWidth()/2, Entity.getMaxHeight()/2, maxRange());
 		}
 	}
-	
+	class ExecuteBehaviour extends PowerConsumingBehaviour {
+		public void action() {
+			super.action();
+			if(retval != -1)
+				return;
+			if(planned.isEmpty()){
+				retval = NO_PLAN;
+				return;
+			}
+			Mineral m = planned.get(0);
+			if(Utils.aproxZero(dist(m))){
+				interact(m);
+				if(canInteract(m) <= 0){
+					planned.remove(m);
+				}
+			} else {
+				moveTo(m.getX(), m.getY(), maxRange());
+			}
+		}
+	}
 	class RechargeBehaviour extends InterruptableBehaviour {
 		public void action() {
-			System.out.println("RechargeBehaviour executing");
 			
 			if(Utils.aproxSame(energy, EntityGlobals.getMaxEnergy())){
 				retval = RECHARGED;
@@ -126,7 +150,6 @@ public class Bot extends Entity {
 	
 	class FinalBehaviour extends InterruptableBehaviour {
 		public void action() {
-			System.out.println("FinalBehaviour executing");
 			moveTo(b.getX(), b.getY(), maxRange());
 		}
 	}
@@ -149,15 +172,19 @@ public class Bot extends Entity {
 		
 		bb.registerFirstState(new WanderBehaviour(), "Wander");
 		bb.registerState(new RechargeBehaviour(), "Recharge");
+		bb.registerState(new ExecuteBehaviour(), "Execute");
 		bb.registerLastState(new FinalBehaviour(), "Final");
+		
 		bb.registerTransition("Wander", "Recharge", OUT_OF_ENERGY);
 		bb.registerTransition("Recharge", "Wander", RECHARGED);
+		bb.registerTransition("Wander", "Execute", FOUND_MINERAL);
+		bb.registerTransition("Execute", "Wander", NO_PLAN);
 		addBehaviour(bb);
 	}   
 	
-	public boolean canInteract(Mineral min) {
-		return false;
-	}
+	public abstract int interact(Mineral m);
+
+	public abstract int canInteract(Mineral min);
 
 	protected void takeDown() {
 		try {
@@ -182,6 +209,10 @@ public class Bot extends Entity {
 	public void recharge(){
 		energy +=  EntityGlobals.getRechargeRate();
 		energy = energy >  EntityGlobals.getMaxEnergy() ?  EntityGlobals.getMaxEnergy(): energy;
+	}
+
+	public double getEnergy() {
+		return energy;
 	}
 	
 }
