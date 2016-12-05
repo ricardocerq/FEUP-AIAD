@@ -13,14 +13,6 @@ import mars.Transporter;
 import repast.simphony.visualizationOGL2D.DefaultStyleOGL2D;
 import saf.v3d.scene.VSpatial;
 
-/**
- * Style for wolf and sheep in 2D displays.  Use the circle shape 
- * specified in DefaultStyle2D.  Here we change the color and size of the shape
- * depending on if the agent is a Wolf or a Sheep.
- * 
- * @author Eric Tatara
- *
- */
 public class AgentStyle2D extends DefaultStyleOGL2D {
 
 	@Override

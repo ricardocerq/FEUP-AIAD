@@ -1,4 +1,5 @@
 package mars;
 
-public class EntityAction {
+public interface EntityAction {
+	public void execute();
 }

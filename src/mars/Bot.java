@@ -136,6 +136,18 @@ public abstract class Bot extends Entity {
 			}
 		}
 	}
+	
+	class ContractBehaviour extends PowerConsumingBehaviour {
+		public void action() {
+			super.action();
+			if(retval != -1)
+				return;
+			
+			
+			
+		}
+	}
+	
 	class RechargeBehaviour extends InterruptableBehaviour {
 		public void action() {
 			
@@ -178,7 +190,6 @@ public abstract class Bot extends Entity {
 		bb.registerState(new RechargeBehaviour(), "Recharge");
 		bb.registerState(new ExecuteBehaviour(), "Execute");
 		bb.registerLastState(new FinalBehaviour(), "Final");
-		
 		bb.registerTransition("Wander", "Recharge", OUT_OF_ENERGY);
 		bb.registerTransition("Execute", "Recharge", OUT_OF_ENERGY);
 		bb.registerTransition("Recharge", "Wander", RECHARGED);

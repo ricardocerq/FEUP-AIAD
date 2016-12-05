@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import repast.simphony.context.Context;
+import repast.simphony.engine.schedule.Schedule;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.grid.Grid;
@@ -125,9 +126,9 @@ public abstract class Entity extends Agent {
 		double ang;
 		double sgn = Math.random() - 0.5;
 		if (sgn > 0)
-			ang = heading + Math.random()*Math.PI/16;
+			ang = heading + Math.random()*Math.PI/8;
 		else
-			ang = heading - Math.random()*Math.PI/16;
+			ang = heading - Math.random()*Math.PI/8;
 		return ang;
 	}
 	
