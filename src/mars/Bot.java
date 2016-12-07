@@ -201,10 +201,10 @@ public abstract class Bot extends Entity {
 				return;
 			}
 			Mineral m = planned.get(0);
-			System.out.println("distance" + dist(m));
+			//System.out.println("distance" + dist(m));
 			if(Utils.aproxZero(dist(m))){
 				interact(m);
-				System.out.println("can Interact" + canInteract(m));
+				//System.out.println("can Interact" + canInteract(m));
 				if(canInteract(m) <= 0){
 					planned.remove(m);
 					if(backToBase()){
@@ -322,6 +322,7 @@ public abstract class Bot extends Entity {
 			prevRetVal = retval;
 			int ret = retval;
 			retval = -1;
+			System.out.println("ending response");
 			return ret;
 		}
 		public int getPreviousReturnValue(){
@@ -334,6 +335,7 @@ public abstract class Bot extends Entity {
 		public ContractInitBehaviour(Agent a, ACLMessage cfp) {
 			super(a, cfp);
 		}
+		
 		protected void handlePropose(ACLMessage propose, Vector v) {
 			System.out.println("Agent "+propose.getSender().getName()+" proposed ");
 		}
@@ -409,7 +411,6 @@ public abstract class Bot extends Entity {
 			for(Map.Entry<Double, ACLMessage> elem : accepted){
 				elem.getValue().setPerformative(ACLMessage.ACCEPT_PROPOSAL);
 				System.out.println("#" + id +" : accepting proposal, sending message");
-				
 			}
 		}
 		protected void handleInform(ACLMessage inform) {
@@ -472,17 +473,17 @@ public abstract class Bot extends Entity {
 					ret = ((RetraceableBehaviour)b).getPreviousReturnValue();
 				} 
 				else ret = b.onEnd();
-				System.out.println("#" + id + ": " + b.getBehaviourName() + " returned " + ret);
+				//System.out.println("#" + id + ": " + b.getBehaviourName() + " returned " + ret);
 			}
 			return ret;
 		}
 	}
 	
 	private Behaviour wanderBehaviour(){
-		ParallelBehaviour b = new RetParallelBehaviour(ParallelBehaviour.WHEN_ANY);
-		b.addSubBehaviour(new WanderBehaviour());
-		b.addSubBehaviour(respondCFP());
-		return b;
+		//ParallelBehaviour b = new RetParallelBehaviour(ParallelBehaviour.WHEN_ANY);
+		//b.addSubBehaviour(new WanderBehaviour());
+		//b.addSubBehaviour(respondCFP());
+		return new WanderBehaviour();
 	}
 	
 	private Behaviour rechargeBehaviour(){
@@ -554,15 +555,26 @@ public abstract class Bot extends Entity {
 		registerTransition(EXECUTE_B, RECHARGE_B, OUT_OF_ENERGY);
 		registerTransition(RECHARGE_B, WANDER_B, RECHARGED);
 		
-		registerTransition(WANDER_B, INIT_CONTRACT_NET_B, FOUND_MINERAL);
+		fsm.registerTransition(WANDER_B, INIT_CONTRACT_NET_B, FOUND_MINERAL);
 		registerTransition(WANDER_B, EXECUTE_B, GO_TO_MINERAL);
-		fsm.registerDefaultTransition(INIT_CONTRACT_NET_B, WANDER_B, new String[]{WANDER_B});
+		fsm.registerDefaultTransition(INIT_CONTRACT_NET_B, WANDER_B, new String[]{INIT_CONTRACT_NET_B});
 		registerTransition(WANDER_B, EXECUTE_B, NEW_CONTRACT);
 		registerTransition(EXECUTE_B, WANDER_B, NO_PLAN);
 		addBehaviour(fsm);
+		FSMBehaviour fsm2 = new FSMBehaviour(this){
+			@Override
+			public int onEnd(){
+				System.out.println("ending");
+				return super.onEnd();
+			}
+		};
+		fsm2.registerFirstState(respondCFP(), "Respond");
+		fsm2.registerDefaultTransition("Respond", "Respond");
+		addBehaviour(fsm2);
+		//addBehaviour(respondCFP());
 	}   
 	private void registerTransition(String src, String dst, int code){
-		fsm.registerTransition(src, dst, code, new String[]{dst});
+		fsm.registerTransition(src, dst, code);
 	}
 	protected boolean backToBase(){
 		return dist(b) > energy - maxRange();
