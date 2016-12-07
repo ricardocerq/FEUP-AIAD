@@ -185,10 +185,10 @@ public abstract class Entity extends Agent {
 		grid.moveTo(this, (int) x, (int) y);
 	}
 	
-	public List<Entity> getCloseBy(double radius, Class c){
+	public List<Entity> getCloseBy(double radius, Class c, boolean includeSelf){
 		List<Entity> ret = new ArrayList<>();
 		for(Entity e: entities){
-			if((e.getClass().equals(c) || e.getClass().getSuperclass().equals(c)) && e != this){
+			if((e.getClass().equals(c) || e.getClass().getSuperclass().equals(c)) && (includeSelf || e != this)){
 				double distance = dist(this.x, this.y, e.x, e.y);
 				if(distance < radius){
 					ret.add(e);

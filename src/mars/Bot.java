@@ -132,8 +132,6 @@ public abstract class Bot extends Entity {
 			super(WANDER_SB);
 		}
 		public void action() {
-			if(id == 1)
-				System.out.println("1 in wander");
 			super.action();
 			if(retval != -1)
 				return;
@@ -141,7 +139,7 @@ public abstract class Bot extends Entity {
 				retval = GO_TO_MINERAL;
 				return;
 			}
-			List<Entity> mineralsCloseBy = getCloseBy(EntityGlobals.getDetectionRange(), Mineral.class);
+			List<Entity> mineralsCloseBy = getCloseBy(EntityGlobals.getDetectionRange(), Mineral.class, false);
 			Collections.sort(mineralsCloseBy, new Comparator<Entity>(){
 						@Override
 						public int compare(Entity arg0, Entity arg1) {
@@ -159,14 +157,13 @@ public abstract class Bot extends Entity {
 				}*/
 				if(m.getTotal() > 0 && id == 1){
 					setMessageFields(m);
-					System.out.println(id + " found mineral");
 					retval = FOUND_MINERAL;
 					return;
 				} else {
 					mineralsCloseBy.remove(0);
 				}
 			}
-			List<Entity> entitiesCloseBy = getCloseBy(EntityGlobals.getCommRange(), Bot.class);
+			List<Entity> entitiesCloseBy = getCloseBy(EntityGlobals.getCommRange(), Bot.class, false);
 			if(!entitiesCloseBy.isEmpty()){
 				Bot closest = (Bot) Collections.min(entitiesCloseBy, new Comparator<Entity>(){
 						@Override
@@ -252,7 +249,7 @@ public abstract class Bot extends Entity {
 			
 		}
 	}
-	class ContractResponseBehaviour extends ContractNetResponder implements RetraceableBehaviour{
+	class ContractResponseBehaviour extends ContractNetResponder{
 		public ContractResponseBehaviour(Agent a, MessageTemplate mt) {
 			super(a, mt);
 		}
@@ -299,7 +296,7 @@ public abstract class Bot extends Entity {
 				e.printStackTrace();
 			}
 			planned.add(Mineral.getMineral(response.fact.locationx, response.fact.locationy));
-			retval = NEW_CONTRACT;
+			//retval = NEW_CONTRACT;
 			ACLMessage inform = accept.createReply();
 			inform.setPerformative(ACLMessage.INFORM);
 			return inform;
@@ -319,22 +316,9 @@ public abstract class Bot extends Entity {
 		protected void handleRejectProposal(ACLMessage cfp, ACLMessage propose, ACLMessage reject) {
 			System.out.println("Agent "+getLocalName()+": Proposal rejected");
 		}
-		int retval = -1;
-		int prevRetVal = -1;
-		@Override
-		public int onEnd() {
-			prevRetVal = retval;
-			int ret = retval;
-			retval = -1;
-			System.out.println("ending response");
-			return ret;
-		}
-		public int getPreviousReturnValue(){
-			return prevRetVal;
-		}
 	}
 	
-	class ContractInitBehaviour extends ContractNetInitiator implements RetraceableBehaviour{
+	class ContractInitBehaviour extends ContractNetInitiator{
 
 		public ContractInitBehaviour(Agent a, ACLMessage cfp) {
 			super(a, cfp);
@@ -430,27 +414,6 @@ public abstract class Bot extends Entity {
 			
 			//retval = FINISHED_CONTRACT; 
 		}
-		int retval = -1;
-		int prevRetVal = -1;
-		@Override
-		public void onStart() {
-			super.onStart();
-			
-			System.out.println("init starting");
-		}
-		@Override
-		public int onEnd() {
-			super.onEnd();
-			prevRetVal = retval;
-			int ret = retval;
-			retval = -1;
-			System.out.println("init exiting");
-			this.restart();
-			return ret;
-		}
-		public int getPreviousReturnValue(){
-			return prevRetVal;
-		}
 	}
 	
 	private int evaluateAction() {
@@ -502,9 +465,6 @@ public abstract class Bot extends Entity {
 	}
 	
 	private Behaviour wanderBehaviour(){
-		//ParallelBehaviour b = new RetParallelBehaviour(ParallelBehaviour.WHEN_ANY);
-		//b.addSubBehaviour(new WanderBehaviour());
-		//b.addSubBehaviour(respondCFP());
 		return new WanderBehaviour();
 	}
 	
@@ -516,7 +476,7 @@ public abstract class Bot extends Entity {
 		return new ExecuteBehaviour(EXECUTE_B);
 	}
 	private List<AID> agentsWithinRange(){
-		return this.getCloseBy(EntityGlobals.getCommRange(), Bot.class).stream().map(e -> ((Bot)e).getAID()).collect(Collectors.toList());
+		return this.getCloseBy(EntityGlobals.getCommRange(), Bot.class, true).stream().map(e -> ((Bot)e).getAID()).collect(Collectors.toList());
 	}
 	
 	private void setMessageFields(Mineral m){
