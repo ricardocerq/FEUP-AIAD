@@ -38,6 +38,7 @@ import repast.simphony.space.grid.Grid;
 import sajas.core.Agent;
 import sajas.core.behaviours.Behaviour;
 import sajas.core.behaviours.FSMBehaviour;
+import sajas.core.behaviours.OneShotBehaviour;
 import sajas.core.behaviours.ParallelBehaviour;
 import sajas.core.behaviours.SimpleBehaviour;
 import sajas.domain.DFService;
@@ -80,6 +81,7 @@ public abstract class Bot extends Entity {
 	private static final String WANDER_SB = "WanderSub";
 	private static final String RECHARGE_B = "Recharge";
 	private static final String EXECUTE_B = "Execute";
+	private static final String START_INIT_CONTRACT_NET_B = "StartInitContractNet";
 	private static final String INIT_CONTRACT_NET_B = "InitContractNet";
 	private static final String RESPOND_CONTRACT_NET_B = "RespondContractNet";
 	
@@ -130,6 +132,8 @@ public abstract class Bot extends Entity {
 			super(WANDER_SB);
 		}
 		public void action() {
+			if(id == 1)
+				System.out.println("1 in wander");
 			super.action();
 			if(retval != -1)
 				return;
@@ -335,7 +339,15 @@ public abstract class Bot extends Entity {
 		public ContractInitBehaviour(Agent a, ACLMessage cfp) {
 			super(a, cfp);
 		}
-		
+		protected Vector prepareCfps(ACLMessage cfp){
+			this.restart();
+			System.out.println("Preparing cfps");
+			return super.prepareCfps(cfp);
+		}
+		protected void sendInitiations(Vector initiations){
+			System.out.println("sending initiations");
+			super.sendInitiations(initiations);
+		}
 		protected void handlePropose(ACLMessage propose, Vector v) {
 			System.out.println("Agent "+propose.getSender().getName()+" proposed ");
 		}
@@ -415,15 +427,25 @@ public abstract class Bot extends Entity {
 		}
 		protected void handleInform(ACLMessage inform) {
 			System.out.println("Agent "+inform.getSender().getName()+" successfully performed the requested action");
+			
 			//retval = FINISHED_CONTRACT; 
 		}
 		int retval = -1;
 		int prevRetVal = -1;
 		@Override
+		public void onStart() {
+			super.onStart();
+			
+			System.out.println("init starting");
+		}
+		@Override
 		public int onEnd() {
+			super.onEnd();
 			prevRetVal = retval;
 			int ret = retval;
 			retval = -1;
+			System.out.println("init exiting");
+			this.restart();
 			return ret;
 		}
 		public int getPreviousReturnValue(){
@@ -549,19 +571,36 @@ public abstract class Bot extends Entity {
 		fsm.registerState(rechargeBehaviour(), RECHARGE_B);
 		fsm.registerState(executeBehaviour(), EXECUTE_B);
 		fsm.registerLastState(new FinalBehaviour("Final"), "Final");
-		fsm.registerState(contractInitBehaviour(), INIT_CONTRACT_NET_B);
+		fsm.registerState(new OneShotBehaviour(){
+			@Override
+			public void action() {
+				//fsm.deregisterState(INIT_CONTRACT_NET_B);
+				fsm.registerState(contractInitBehaviour(), INIT_CONTRACT_NET_B);
+				//fsm.registerDefaultTransition(START_INIT_CONTRACT_NET_B, INIT_CONTRACT_NET_B);
+				//fsm.registerDefaultTransition(INIT_CONTRACT_NET_B, WANDER_B);
+			}
+		}, START_INIT_CONTRACT_NET_B);
+		
+		
+		//fsm.registerState(contractInitBehaviour(), INIT_CONTRACT_NET_B);
+		fsm.registerDefaultTransition(START_INIT_CONTRACT_NET_B, INIT_CONTRACT_NET_B);
+		fsm.registerDefaultTransition(INIT_CONTRACT_NET_B, WANDER_B);
+		
+		//fsm.registerState(contractInitBehaviour(), INIT_CONTRACT_NET_B);
 		
 		registerTransition(WANDER_B, RECHARGE_B, OUT_OF_ENERGY);
 		registerTransition(EXECUTE_B, RECHARGE_B, OUT_OF_ENERGY);
 		registerTransition(RECHARGE_B, WANDER_B, RECHARGED);
 		
-		fsm.registerTransition(WANDER_B, INIT_CONTRACT_NET_B, FOUND_MINERAL);
+		fsm.registerTransition(WANDER_B, START_INIT_CONTRACT_NET_B, FOUND_MINERAL);
+		//fsm.registerTransition(WANDER_B, INIT_CONTRACT_NET_B, FOUND_MINERAL);
 		registerTransition(WANDER_B, EXECUTE_B, GO_TO_MINERAL);
-		fsm.registerDefaultTransition(INIT_CONTRACT_NET_B, WANDER_B, new String[]{INIT_CONTRACT_NET_B});
+		//fsm.registerDefaultTransition(INIT_CONTRACT_NET_B, WANDER_B, new String[]{INIT_CONTRACT_NET_B});
+		
 		registerTransition(WANDER_B, EXECUTE_B, NEW_CONTRACT);
 		registerTransition(EXECUTE_B, WANDER_B, NO_PLAN);
 		addBehaviour(fsm);
-		FSMBehaviour fsm2 = new FSMBehaviour(this){
+		/*FSMBehaviour fsm2 = new FSMBehaviour(this){
 			@Override
 			public int onEnd(){
 				System.out.println("ending");
@@ -569,9 +608,9 @@ public abstract class Bot extends Entity {
 			}
 		};
 		fsm2.registerFirstState(respondCFP(), "Respond");
-		fsm2.registerDefaultTransition("Respond", "Respond");
-		addBehaviour(fsm2);
-		//addBehaviour(respondCFP());
+		fsm2.registerDefaultTransition("Respond", "Respond");*/
+		//addBehaviour(fsm2);
+		addBehaviour(respondCFP());
 	}   
 	private void registerTransition(String src, String dst, int code){
 		fsm.registerTransition(src, dst, code);
