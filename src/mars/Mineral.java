@@ -16,7 +16,6 @@ public class Mineral extends Entity{
 	public Mineral(Context<Object> context, ContinuousSpace<Object> cs, Grid<Object> grid, double x, double y){
 		super(context, cs, grid, 0, x, y);
 		deposit = Utils.r.nextInt(EntityGlobals.getMaxMineralValue()-EntityGlobals.getMinMineralValue())+EntityGlobals.getMinMineralValue();
-		System.out.println(deposit);
 		scanned = 0;
 		extracted = 0;
 	}
@@ -78,5 +77,18 @@ public class Mineral extends Entity{
 		int actual = Math.max(0, Math.min(amount, extracted));
 		extracted -= actual;
 		return actual;
+	}
+	
+	public int getTotal(){
+		return this.getScannable()+this.getScanned()+this.getExtracted();
+	}
+	
+	public static Mineral getMineral(double x, double y){
+		for(Entity e: entities){
+			if(e instanceof Mineral && Utils.aproxZero(Entity.dist(x, y, e.getX(), e.getY()))){
+				return (Mineral)e;
+			}
+		}
+		return null;
 	}
 }

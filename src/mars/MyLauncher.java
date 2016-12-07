@@ -58,11 +58,13 @@ public class MyLauncher extends RepastSLauncher {
 
 	}
 
+	
 	@Override
 	public Context build(Context<Object> context) {
 		agents.clear();
 		Entity.clearEntities();
 		Parameters p = RunEnvironment.getInstance().getParameters();
+		
 		int xdim = (Integer)p.getValue("xdim");   // The x dimension of the physical space
 		int ydim = (Integer)p.getValue("ydim");   // The y dimension of the physical space
 		

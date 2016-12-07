@@ -1,12 +1,13 @@
 package onto;
 
+import jade.content.Predicate;
 import jade.content.onto.BeanOntology;
 import jade.content.onto.BeanOntologyException;
 import jade.content.onto.Ontology;
 
 public class MarsOntology extends BeanOntology {
 	
-	public static final String ONTOLOGY_NAME = "mars";
+	public static final String ONTOLOGY_NAME = "mars-onto";
 	
 	private static Ontology theInstance = new MarsOntology();
 	
@@ -22,7 +23,7 @@ public class MarsOntology extends BeanOntology {
 			// add all Concept, Predicate and AgentAction
 			add(ContractOutcome.class);
 			add(DepositFact.class);
-			add(DepositFactRequestAnswer.class);
+			//add(DepositFactRequestAnswer.class);
 			add(DepositProposal.class);
 			add(DepositProposalRequest.class);
 			add(DepositProposalResponse.class);

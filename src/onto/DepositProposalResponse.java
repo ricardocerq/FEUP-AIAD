@@ -3,10 +3,27 @@ package onto;
 import jade.content.Predicate;
 
 public class DepositProposalResponse implements Predicate {
-	
 	public Task.Type type;
-	public double locationx;
-	public double locationy;
-	public boolean accepted;
-
+	public Task.Type getType() {
+		return type;
+	}
+	public void setType(Task.Type type) {
+		this.type = type;
+	}
+	public DepositFact getFact() {
+		return fact;
+	}
+	public void setFact(DepositFact fact) {
+		this.fact = fact;
+	}
+	public DepositFact fact;
+	
+	public DepositProposalResponse(DepositProposal proposal){
+		this.type = proposal.type;
+		this.fact = proposal.fact;
+	}
+	
+	public DepositProposalResponse(){
+		
+	}
 }

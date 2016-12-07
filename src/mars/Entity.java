@@ -12,7 +12,7 @@ import repast.simphony.space.grid.Grid;
 import sajas.core.Agent;
 
 public abstract class Entity extends Agent {
-	private static List<Entity> entities = new ArrayList<Entity>();
+	protected static List<Entity> entities = new ArrayList<Entity>();
 	
 	
 	
@@ -40,6 +40,7 @@ public abstract class Entity extends Agent {
 	}
 	
 	public Entity(Context<Object> context, ContinuousSpace<Object> cs, Grid<Object> grid, double maxspeed, double x, double y){
+		entities.add(this);
 		context.add(this);
 		this.context = context;
 		this.cs = cs;
@@ -50,7 +51,6 @@ public abstract class Entity extends Agent {
 		this.targetx = x;
 		this.targety = y;
 		repastSync();
-		entities.add(this);
 	}
 	public Entity(Context<Object> context,ContinuousSpace<Object> cs, Grid<Object> grid, double maxspeed){
 		this(context, cs, grid, maxspeed, Math.random()*EntityGlobals.getMaxWidth(), Math.random()*EntityGlobals.getMaxHeight());
@@ -188,7 +188,7 @@ public abstract class Entity extends Agent {
 	public List<Entity> getCloseBy(double radius, Class c){
 		List<Entity> ret = new ArrayList<>();
 		for(Entity e: entities){
-			if(e.getClass().equals(c) && e != this){
+			if((e.getClass().equals(c) || e.getClass().getSuperclass().equals(c)) && e != this){
 				double distance = dist(this.x, this.y, e.x, e.y);
 				if(distance < radius){
 					ret.add(e);
