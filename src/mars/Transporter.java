@@ -1,5 +1,6 @@
 package mars;
 
+import onto.DepositFact;
 import repast.simphony.context.Context;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.grid.Grid;
@@ -42,5 +43,10 @@ public class Transporter extends Bot {
 		int amount = Math.min(carrying, EntityGlobals.getUnloadSpeed());
 		carrying -= amount;
 		base.addMineral(amount);
+	}
+
+	@Override
+	protected int canInteract(DepositFact min) {
+		return min.amountExtracted;
 	}
 }

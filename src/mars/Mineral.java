@@ -91,4 +91,7 @@ public class Mineral extends Entity{
 		}
 		return null;
 	}
+	public static int averageAmount(){
+		return EntityGlobals.getMinMineralValue() + (EntityGlobals.getMaxMineralValue()-EntityGlobals.getMinMineralValue())/2;
+	}
 }

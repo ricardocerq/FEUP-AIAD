@@ -23,6 +23,7 @@ public abstract class Entity extends Agent {
 	public void setMaxspeed(double maxspeed) {
 		this.maxspeed = maxspeed;
 	}
+	
 	private static boolean wrapAround = false;
 	private double x;
 	private double y;

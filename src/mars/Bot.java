@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -28,6 +29,7 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.util.leap.Collection;
 import jade.util.leap.Iterator;
+import onto.DepositFact;
 import onto.DepositProposal;
 import onto.DepositProposalRequest;
 import onto.DepositProposalResponse;
@@ -60,6 +62,29 @@ public abstract class Bot extends Entity {
 	private SLCodec codec;
 	private Ontology onto;
 	private FSMBehaviour fsm;
+	private Mineral managing;
+	private Map<Mineral, Integer> mineralTimers = new HashMap<>();
+	
+	private void setMineralTimer(Mineral m){
+		mineralTimers.put(m, EntityGlobals.getMineralTimerValue());
+	}
+	private void updateMineralTimers(){
+		java.util.Iterator<Map.Entry<Mineral, Integer>> it = mineralTimers.entrySet().iterator();
+		while(it.hasNext()){
+			Map.Entry<Mineral, Integer> el = it.next();
+			int num = el.getValue();
+			if(num <= 1){
+				it.remove();
+			} else {
+				el.setValue(num - 1);
+			}
+		}
+	}
+	
+	private boolean recentlyManaged(Mineral m){
+		return mineralTimers.containsKey(m);
+	}
+	
 	public Bot(Context<Object> context, ContinuousSpace<Object> cs, Grid<Object> grid, double maxspeed, double x, double y, Base b){
 		super(context, cs, grid, maxspeed, x, y);
 		this.b = b;
@@ -119,6 +144,7 @@ public abstract class Bot extends Entity {
 		}
 
 		public void action() {
+			updateMineralTimers();
 			//System.out.println("Agent " + id + " running " + this.getBehaviourName());
 			if(dist(b) > energy - maxRange()){
 				retval = OUT_OF_ENERGY;
@@ -155,8 +181,8 @@ public abstract class Bot extends Entity {
 				} else {
 					mineralsCloseBy.remove(0);
 				}*/
-				if(m.getTotal() > 0 && id == 1){
-					setMessageFields(m);
+				if(m.getTotal() > 0 && !recentlyManaged(m) && id == 1){
+					setMessageFields(m); 
 					retval = FOUND_MINERAL;
 					return;
 				} else {
@@ -277,13 +303,45 @@ public abstract class Bot extends Entity {
 				System.out.println("Agent "+getLocalName()+": Refuse");
 				throw new RefuseException("evaluation-failed");
 			}*/
+			int amountInteractable = canInteract(call.fact);
 			ACLMessage proposal = cfp.createReply();
-			proposal.setPerformative(ACLMessage.PROPOSE);
-			try {
-				getContentManager().fillContent(proposal, new DepositProposal(call.fact, Bot.this));
-			} catch (CodecException | OntologyException e) {
-				e.printStackTrace();
+			
+			//proposal.setPerformative(ACLMessage.REFUSE);
+			double cost = 0;
+			double currEnergy = energy;
+			int currCarrying = 0;
+			double posx = getX();
+			double posy = getY();
+			int i;
+			for(i = 0; i < planned.size(); i++){
+				if(Utils.aproxSame(call.fact.locationx, planned.get(i).getX()) && Utils.aproxSame(call.fact.locationy, planned.get(i).getY())){
+					System.out.println("Already planned");
+					break;
+				}
+				//if(insufficientEnergy(currEnergy - maxRange())){
+				//	cost += Entity.dist(posx, posy, b.getX(), b.getY());
+				//	cost += timeToLeaveBase(currEnergy, carrying);
+				//} else {
+					cost += Entity.dist(posx, posy, planned.get(i).getX(), planned.get(i).getY());
+				//}
+				
+				posx = planned.get(i).getX();
+				posy = planned.get(i).getY();
 			}
+			cost += Entity.dist(posx, posy, call.fact.locationx, call.fact.locationy);
+			
+			double remainingenergy = getEnergy() - cost;
+			if((planned.size() != 0 && i != planned.size()) || amountInteractable == 0 || insufficientEnergy(remainingenergy)){
+				proposal.setPerformative(ACLMessage.REFUSE);
+			} else {
+				try {
+					getContentManager().fillContent(proposal, new DepositProposal(call.fact, Bot.this, cost));
+				} catch (CodecException | OntologyException e) {
+					e.printStackTrace();
+				}
+				proposal.setPerformative(ACLMessage.PROPOSE);
+			}
+			
 			return proposal;
 		}
 		@Override
@@ -324,12 +382,9 @@ public abstract class Bot extends Entity {
 			super(a, cfp);
 		}
 		protected Vector prepareCfps(ACLMessage cfp){
-			this.restart();
-			System.out.println("Preparing cfps");
 			return super.prepareCfps(cfp);
 		}
 		protected void sendInitiations(Vector initiations){
-			System.out.println("sending initiations");
 			super.sendInitiations(initiations);
 		}
 		protected void handlePropose(ACLMessage propose, Vector v) {
@@ -352,9 +407,9 @@ public abstract class Bot extends Entity {
 		}
 		protected void handleAllResponses(Vector responses, Vector acceptances) {
 			
-			List<Map.Entry<Double, ACLMessage>> proposalsScan = new ArrayList<>();
-			List<Map.Entry<Double, ACLMessage>> proposalsExtract = new ArrayList<>();
-			List<Map.Entry<Double, ACLMessage>> proposalsTransport = new ArrayList<>();
+			List<Map.Entry<DepositProposal, ACLMessage>> proposalsScan = new ArrayList<>();
+			List<Map.Entry<DepositProposal, ACLMessage>> proposalsExtract = new ArrayList<>();
+			List<Map.Entry<DepositProposal, ACLMessage>> proposalsTransport = new ArrayList<>();
 			Enumeration e = responses.elements();
 			while (e.hasMoreElements()) {
 				ACLMessage msg = (ACLMessage) e.nextElement();
@@ -368,7 +423,7 @@ public abstract class Bot extends Entity {
 					} catch (CodecException | OntologyException except) {
 						except.printStackTrace();
 					}
-					List<Map.Entry<Double, ACLMessage>> toadd = null;
+					List<Map.Entry<DepositProposal, ACLMessage>> toadd = null;
 					switch(prop.type){
 					case SCAN:
 						toadd = proposalsScan;
@@ -386,25 +441,39 @@ public abstract class Bot extends Entity {
 					} catch (CodecException | OntologyException except) {
 						except.printStackTrace();
 					}
-					toadd.add(new AbstractMap.SimpleEntry<Double, ACLMessage>(prop.cost, reply));
+					toadd.add(new AbstractMap.SimpleEntry<DepositProposal, ACLMessage>(prop, reply));
 					reply.setPerformative(ACLMessage.REJECT_PROPOSAL);
 				}
 			}
-			Comparator<Map.Entry<Double, ACLMessage>> c = new Comparator<Map.Entry<Double, ACLMessage>>(){
+			Comparator<Map.Entry<DepositProposal, ACLMessage>> c = new Comparator<Map.Entry<DepositProposal, ACLMessage>>(){
 				@Override
-				public int compare(Entry<Double, ACLMessage> arg0, Entry<Double, ACLMessage> arg1) {
-					return arg0.getKey().compareTo(arg1.getKey());
+				public int compare(Entry<DepositProposal, ACLMessage> arg0, Entry<DepositProposal, ACLMessage> arg1) {
+					return Double.compare(arg0.getKey().cost, arg1.getKey().cost);
 				}
 				
 			};
 			Collections.sort(proposalsScan, c);
 			Collections.sort(proposalsExtract, c);		
 			Collections.sort(proposalsTransport, c);
-			List<Map.Entry<Double, ACLMessage>> accepted = new ArrayList<>();
-			accepted.addAll(proposalsScan);
-			accepted.addAll(proposalsExtract);
-			accepted.addAll(proposalsTransport);
-			for(Map.Entry<Double, ACLMessage> elem : accepted){
+//			List<Map.Entry<Double, ACLMessage>> accepted = new ArrayList<>();
+//			accepted.addAll(proposalsScan);
+//			accepted.addAll(proposalsExtract);
+//			accepted.addAll(proposalsTransport);
+//			for(Map.Entry<Double, ACLMessage> elem : accepted){
+//				elem.getValue().setPerformative(ACLMessage.ACCEPT_PROPOSAL);
+//				System.out.println("#" + id +" : accepting proposal, sending message");
+//			}
+			for(Map.Entry<DepositProposal, ACLMessage> elem : proposalsScan){
+				elem.getValue().setPerformative(ACLMessage.ACCEPT_PROPOSAL);
+				System.out.println("#" + id +" : accepting proposal, sending message");
+			}
+			
+			for(Map.Entry<DepositProposal, ACLMessage> elem : proposalsExtract){
+				elem.getValue().setPerformative(ACLMessage.ACCEPT_PROPOSAL);
+				System.out.println("#" + id +" : accepting proposal, sending message");
+			}
+			
+			for(Map.Entry<DepositProposal, ACLMessage> elem : proposalsTransport){
 				elem.getValue().setPerformative(ACLMessage.ACCEPT_PROPOSAL);
 				System.out.println("#" + id +" : accepting proposal, sending message");
 			}
@@ -430,16 +499,6 @@ public abstract class Bot extends Entity {
 				MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
 				MessageTemplate.MatchPerformative(ACLMessage.CFP));
 		return new ContractResponseBehaviour(this, template);
-	}
-	
-	class FinalBehaviour extends InterruptableBehaviour {
-		public FinalBehaviour(String string) {
-			super(string);
-		}
-
-		public void action() {
-			moveTo(b.getX(), b.getY(), maxRange());
-		}
 	}
 	
 	class RetParallelBehaviour extends ParallelBehaviour{
@@ -476,10 +535,12 @@ public abstract class Bot extends Entity {
 		return new ExecuteBehaviour(EXECUTE_B);
 	}
 	private List<AID> agentsWithinRange(){
-		return this.getCloseBy(EntityGlobals.getCommRange(), Bot.class, true).stream().map(e -> ((Bot)e).getAID()).collect(Collectors.toList());
+		return this.getCloseBy(EntityGlobals.getCommRange(), Bot.class, false).stream().map(e -> ((Bot)e).getAID()).collect(Collectors.toList());
 	}
 	
 	private void setMessageFields(Mineral m){
+		managing = m;
+		setMineralTimer(m);
 		mycfp.clearAllReceiver();
 		List<AID> agents = agentsWithinRange();
   		for (AID a : agents) {
@@ -530,7 +591,6 @@ public abstract class Bot extends Entity {
 		fsm.registerFirstState(wanderBehaviour(), WANDER_B);
 		fsm.registerState(rechargeBehaviour(), RECHARGE_B);
 		fsm.registerState(executeBehaviour(), EXECUTE_B);
-		fsm.registerLastState(new FinalBehaviour("Final"), "Final");
 		fsm.registerState(new OneShotBehaviour(){
 			@Override
 			public void action() {
@@ -575,8 +635,13 @@ public abstract class Bot extends Entity {
 	private void registerTransition(String src, String dst, int code){
 		fsm.registerTransition(src, dst, code);
 	}
+	
+	protected boolean insufficientEnergy(double energ){
+		return dist(b) > energ;
+	}
+	
 	protected boolean backToBase(){
-		return dist(b) > energy - maxRange();
+		return insufficientEnergy(energy-maxRange());
 	}
 
 	protected int interact(Mineral m){
@@ -590,7 +655,8 @@ public abstract class Bot extends Entity {
 	}
 
 	protected abstract int canInteract(Mineral min);
-
+	protected abstract int canInteract(DepositFact min);
+	
 	protected void takeDown() {
 		try {
 			DFService.deregister(this);  
@@ -627,5 +693,16 @@ public abstract class Bot extends Entity {
 	protected void atBaseAction(Base b){
 		recharge();
 	}
+	
+	protected int timeToLeaveBase(int energyLevel, int carrying){
+		int timeToCharge = (int) Math.ceil(((double) EntityGlobals.getMaxCapacity() - energyLevel)/EntityGlobals.getRechargeRate());
+		int timeToUnload= (int) Math.ceil(((double) carrying)/EntityGlobals.getUnloadSpeed());
+		return Math.max(timeToCharge, timeToUnload);
+	}
 }
+
+
+
+
+
 

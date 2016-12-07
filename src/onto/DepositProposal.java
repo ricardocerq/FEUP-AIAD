@@ -2,7 +2,6 @@ package onto;
 
 import jade.content.Predicate;
 import mars.Bot;
-import mars.Mineral;
 import mars.Producer;
 import mars.Spotter;
 import mars.Transporter;
@@ -29,8 +28,8 @@ public class DepositProposal implements Predicate {
 	}
 	public double cost;
 	public DepositFact fact;
-	public DepositProposal(DepositFact m, Bot b){
-		this.cost = 0;
+	public DepositProposal(DepositFact m, Bot b, double cost){
+		this.cost = cost;
 		this.fact = m;
 		if(b instanceof Spotter){
 			type = Task.Type.SCAN;

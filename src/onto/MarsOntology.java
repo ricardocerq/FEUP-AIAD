@@ -1,6 +1,5 @@
 package onto;
 
-import jade.content.Predicate;
 import jade.content.onto.BeanOntology;
 import jade.content.onto.BeanOntologyException;
 import jade.content.onto.Ontology;

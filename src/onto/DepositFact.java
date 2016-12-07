@@ -1,7 +1,6 @@
 package onto;
 
 import jade.content.Concept;
-import jade.content.Predicate;
 import mars.Mineral;
 
 public class DepositFact implements Concept {

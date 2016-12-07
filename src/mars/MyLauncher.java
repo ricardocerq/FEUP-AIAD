@@ -138,6 +138,10 @@ public class MyLauncher extends RepastSLauncher {
 		
 		EntityGlobals.setMaxCapacity(maxCapacity);
 		
+		int mineralTimerValue = (Integer)p.getValue("mineraltimervalue");
+		
+		EntityGlobals.setMineralTimerValue(mineralTimerValue);
+		
 		
 		Grid<Object> grid = GridFactoryFinder.createGridFactory(null).createGrid("Simple Grid", context,
 				new GridBuilderParameters<Object>(new repast.simphony.space.grid.WrapAroundBorders(),

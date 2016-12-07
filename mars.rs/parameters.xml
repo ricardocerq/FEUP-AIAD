@@ -72,6 +72,9 @@
 	<parameter name="maxcapacity" displayName="bot max capacity"
 		type="int" defaultValue="10" isReadOnly="false"
 		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="mineraltimervalue" displayName="mineral timer value"
+		type="int" defaultValue="1000" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
 </parameters>
 
 
