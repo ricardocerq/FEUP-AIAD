@@ -181,7 +181,7 @@ public abstract class Bot extends Entity {
 				} else {
 					mineralsCloseBy.remove(0);
 				}*/
-				if(m.getTotal() > 0 && !recentlyManaged(m) && id == 1){
+				if(m.getTotal() > 0 && !recentlyManaged(m)){
 					setMessageFields(m); 
 					retval = FOUND_MINERAL;
 					return;
@@ -227,12 +227,29 @@ public abstract class Bot extends Entity {
 				System.out.println("no plan");
 				return;
 			}
+			List<Entity> mineralsCloseBy = getCloseBy(EntityGlobals.getDetectionRange(), Mineral.class, false);
+			Collections.sort(mineralsCloseBy, new Comparator<Entity>(){
+						@Override
+						public int compare(Entity arg0, Entity arg1) {
+							return Double.compare(dist(arg0), dist(arg1));
+						}
+			});
+			while(!mineralsCloseBy.isEmpty()){
+				Mineral m = (Mineral) mineralsCloseBy.get(0);
+				if(m.getTotal() > 0 && !recentlyManaged(m)){
+					setMessageFields(m); 
+					retval = FOUND_MINERAL;
+					return;
+				} else {
+					mineralsCloseBy.remove(0);
+				}
+			}
 			Mineral m = planned.get(0);
 			//System.out.println("distance" + dist(m));
 			if(Utils.aproxZero(dist(m))){
 				interact(m);
 				//System.out.println("can Interact" + canInteract(m));
-				if(canInteract(m) <= 0){
+				if(shouldLeave(m)){
 					planned.remove(m);
 					if(backToBase()){
 						retval = OUT_OF_ENERGY;
@@ -289,6 +306,7 @@ public abstract class Bot extends Entity {
 				e.printStackTrace();
 			}
 			System.out.println("#"+id+": received proposal for " + call.fact.locationx + ", " + call.fact.locationy);
+			setMineralTimer(Mineral.getMineral(call.fact.locationx, call.fact.locationy));
 			/*
 			int proposal = evaluateAction();
 			if (proposal > 2) {
@@ -489,6 +507,9 @@ public abstract class Bot extends Entity {
 		return (int) (Math.random() * 10);
 	}
 
+	public boolean shouldLeave(Mineral m) {
+		return canInteract(m) <= 0 || insufficientEnergy(energy-EntityGlobals.getPassiveDischarge());
+	}
 	private boolean performAction() {
 		// Simulate action execution by generating a random number
 		return (Math.random() > 0.2);
@@ -613,6 +634,7 @@ public abstract class Bot extends Entity {
 		registerTransition(RECHARGE_B, WANDER_B, RECHARGED);
 		
 		fsm.registerTransition(WANDER_B, START_INIT_CONTRACT_NET_B, FOUND_MINERAL);
+		fsm.registerTransition(EXECUTE_B, START_INIT_CONTRACT_NET_B, FOUND_MINERAL);
 		//fsm.registerTransition(WANDER_B, INIT_CONTRACT_NET_B, FOUND_MINERAL);
 		registerTransition(WANDER_B, EXECUTE_B, GO_TO_MINERAL);
 		//fsm.registerDefaultTransition(INIT_CONTRACT_NET_B, WANDER_B, new String[]{INIT_CONTRACT_NET_B});

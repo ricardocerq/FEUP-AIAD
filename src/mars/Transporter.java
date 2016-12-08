@@ -24,7 +24,9 @@ public class Transporter extends Bot {
 	protected int interact(Mineral m) {
 		if(super.interact(m) == 0)
 			return 0;
-		return m.gather(EntityGlobals.getGatherSpeed());
+		int amount = m.gather(Math.max(Math.min(EntityGlobals.getGatherSpeed(),EntityGlobals.getMaxCapacity() - carrying), 0));
+		carrying += amount;
+		return amount;
 	}
 
 	@Override
@@ -48,5 +50,11 @@ public class Transporter extends Bot {
 	@Override
 	protected int canInteract(DepositFact min) {
 		return min.amountExtracted;
+	}
+	
+	@Override
+	public boolean shouldLeave(Mineral m){
+		System.out.println("should leave " + super.shouldLeave(m) + " " + (carrying + EntityGlobals.getGatherSpeed() > EntityGlobals.getMaxCapacity()));
+		return super.shouldLeave(m) || carrying + EntityGlobals.getGatherSpeed() > EntityGlobals.getMaxCapacity();
 	}
 }
