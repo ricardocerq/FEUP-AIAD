@@ -7,7 +7,7 @@ import repast.simphony.space.grid.Grid;
 
 public class Transporter extends Bot {
 	
-	private int carrying;
+	public int carrying;
 	
 	public Transporter(Context<Object> context, ContinuousSpace<Object> cs, Grid<Object> grid, double maxspeed,
 			double x, double y, Base b) {

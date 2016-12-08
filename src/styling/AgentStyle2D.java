@@ -1,6 +1,7 @@
 package styling;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.color.ColorSpace;
 
 import mars.Base;
@@ -11,33 +12,34 @@ import mars.Producer;
 import mars.Spotter;
 import mars.Transporter;
 import repast.simphony.visualizationOGL2D.DefaultStyleOGL2D;
+import saf.v3d.scene.Position;
 import saf.v3d.scene.VSpatial;
 
 public class AgentStyle2D extends DefaultStyleOGL2D {
 
 	@Override
-	public Color getColor(Object o){
-		if (o instanceof Bot){
+	public Color getColor(Object o) {
+		if (o instanceof Bot) {
 			Color c;
 			if (o instanceof Spotter)
 				c = Color.BLUE;
-			else if(o instanceof Producer)
+			else if (o instanceof Producer)
 				c = Color.YELLOW;
 			else
 				c = Color.GREEN;
-			float[] hsb = Color.RGBtoHSB(c.getRed()/255, c.getGreen()/255, c.getBlue()/255, null);
+			float[] hsb = Color.RGBtoHSB(c.getRed() / 255, c.getGreen() / 255, c.getBlue() / 255, null);
 			hsb[1] = .5f;
 			float amount = .25f;
-			hsb[2] = (1-amount) + (float) (((Bot)o).getEnergy() / EntityGlobals.getMaxEnergy()) * amount;
-			
+			hsb[2] = (1 - amount) + (float) (((Bot) o).getEnergy() / EntityGlobals.getMaxEnergy()) * amount;
+
 			return Color.getHSBColor(hsb[0], hsb[1], hsb[2]);
-			//return c;
+			// return c;
 		}
-		if(o instanceof Base)
+		if (o instanceof Base)
 			return Color.CYAN;
 		return null;
 	}
-	
+
 	@Override
 	public float getScale(Object o) {
 		if (o instanceof Bot)
@@ -46,14 +48,54 @@ public class AgentStyle2D extends DefaultStyleOGL2D {
 			return 2f;
 		return 1f;
 	}
+
 	@Override
-	public VSpatial getVSpatial(Object agent, VSpatial spatial){
+	public VSpatial getVSpatial(Object agent, VSpatial spatial) {
 		VSpatial ret = spatial;
-		if(agent instanceof Mineral){
+		if (agent instanceof Mineral) {
 			ret = shapeFactory.createRectangle(10, 10);
 		} else {
 			ret = shapeFactory.createCircle(4, 16);
 		}
 		return ret;
+	}
+
+	public String getLabel(Object o) {
+		if (o instanceof Bot) {
+			Bot b = (Bot) o;
+			String type = "?";
+			if (b instanceof Transporter)
+				type = "T " + ((Transporter)b).carrying + " " ;
+			else if (b instanceof Spotter)
+				type = "S";
+			else if (b instanceof Producer)
+				type = "P";
+
+			String state = "" + Math.round(100 * ((b.getEnergy() / EntityGlobals.getMaxEnergy())));
+
+			return type + ", " + state;
+		}
+
+		return null;
+	}
+
+	@Override
+	public Font getLabelFont(Object object) {
+		return new Font("Arial", Font.BOLD, 12);
+	}
+
+	@Override
+	public Position getLabelPosition(Object object) {
+		return Position.NORTH;
+	}
+
+	@Override
+	public Color getLabelColor(Object object) {
+		return Color.WHITE;
+	}
+
+	@Override
+	public float getLabelYOffset(Object object) {
+		return 5;
 	}
 }
