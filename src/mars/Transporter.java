@@ -7,7 +7,7 @@ import repast.simphony.space.grid.Grid;
 
 public class Transporter extends Bot {
 	
-	public int carrying;
+	private int carrying;
 	
 	public Transporter(Context<Object> context, ContinuousSpace<Object> cs, Grid<Object> grid, double maxspeed,
 			double x, double y, Base b) {
@@ -56,5 +56,9 @@ public class Transporter extends Bot {
 	public boolean shouldLeave(Mineral m){
 		System.out.println("should leave " + super.shouldLeave(m) + " " + (carrying + EntityGlobals.getGatherSpeed() > EntityGlobals.getMaxCapacity()));
 		return super.shouldLeave(m) || carrying + EntityGlobals.getGatherSpeed() > EntityGlobals.getMaxCapacity();
+	}
+	
+	public int getCarrying() {
+		return carrying;
 	}
 }

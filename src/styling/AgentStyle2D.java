@@ -65,7 +65,7 @@ public class AgentStyle2D extends DefaultStyleOGL2D {
 			Bot b = (Bot) o;
 			String type = "?";
 			if (b instanceof Transporter)
-				type = "T " + ((Transporter)b).carrying + " " ;
+				type = "T " + ((Transporter)b).getCarrying() + " " ;
 			else if (b instanceof Spotter)
 				type = "S";
 			else if (b instanceof Producer)
