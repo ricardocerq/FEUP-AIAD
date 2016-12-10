@@ -145,7 +145,6 @@ public abstract class Bot extends Entity {
 
 		public void action() {
 			updateMineralTimers();
-			//System.out.println("Agent " + id + " running " + this.getBehaviourName());
 			if(dist(b) > energy - maxRange()){
 				retval = OUT_OF_ENERGY;
 				return;
@@ -224,7 +223,6 @@ public abstract class Bot extends Entity {
 				return;
 			if(planned.isEmpty()){
 				retval = NO_PLAN;
-				System.out.println("no plan");
 				return;
 			}
 			List<Entity> mineralsCloseBy = getCloseBy(EntityGlobals.getDetectionRange(), Mineral.class, false);
@@ -298,29 +296,17 @@ public abstract class Bot extends Entity {
 		}
 		@Override
 		protected ACLMessage handleCfp(ACLMessage cfp) throws NotUnderstoodException, RefuseException {
-			//System.out.println("Agent "+getLocalName()+": CFP received from "+cfp.getSender().getName()+". Action is "+cfp.getContent());
 			DepositProposalRequest call = null;
+			
 			try {
 				call = (DepositProposalRequest) getContentManager().extractContent(cfp);
 			} catch (CodecException | OntologyException e) {
 				e.printStackTrace();
 			}
-			System.out.println("#"+id+": received proposal for " + call.fact.locationx + ", " + call.fact.locationy);
+			
+			
+			
 			setMineralTimer(Mineral.getMineral(call.fact.locationx, call.fact.locationy));
-			/*
-			int proposal = evaluateAction();
-			if (proposal > 2) {
-				System.out.println("Agent "+getLocalName()+": Proposing "+proposal);
-				ACLMessage propose = cfp.createReply();
-				propose.setPerformative(ACLMessage.PROPOSE);
-				propose.setContent(String.valueOf(proposal));
-				return propose;
-			}
-			else {
-				// We refuse to provide a proposal
-				System.out.println("Agent "+getLocalName()+": Refuse");
-				throw new RefuseException("evaluation-failed");
-			}*/
 			int amountInteractable = canInteract(call.fact);
 			ACLMessage proposal = cfp.createReply();
 			
@@ -331,9 +317,10 @@ public abstract class Bot extends Entity {
 			double posx = getX();
 			double posy = getY();
 			int i;
+			
 			for(i = 0; i < planned.size(); i++){
 				if(Utils.aproxSame(call.fact.locationx, planned.get(i).getX()) && Utils.aproxSame(call.fact.locationy, planned.get(i).getY())){
-					System.out.println("Already planned");
+					//System.out.println("Already planned");
 					break;
 				}
 				//if(insufficientEnergy(currEnergy - maxRange())){
@@ -349,8 +336,10 @@ public abstract class Bot extends Entity {
 			cost += Entity.dist(posx, posy, call.fact.locationx, call.fact.locationy);
 			
 			double remainingenergy = getEnergy() - cost;
+			System.out.print("#"+id+": received proposal for " + call.fact.locationx + ", " + call.fact.locationy + " ");
 			if((planned.size() != 0 && i != planned.size()) || amountInteractable == 0 || insufficientEnergy(remainingenergy)){
 				proposal.setPerformative(ACLMessage.REFUSE);
+				System.out.println("refusing");
 			} else {
 				try {
 					getContentManager().fillContent(proposal, new DepositProposal(call.fact, Bot.this, cost));
@@ -358,6 +347,7 @@ public abstract class Bot extends Entity {
 					e.printStackTrace();
 				}
 				proposal.setPerformative(ACLMessage.PROPOSE);
+				System.out.println("accepting");
 			}
 			
 			return proposal;
@@ -376,17 +366,6 @@ public abstract class Bot extends Entity {
 			ACLMessage inform = accept.createReply();
 			inform.setPerformative(ACLMessage.INFORM);
 			return inform;
-			/*System.out.println("Agent "+getLocalName()+": Proposal accepted");
-			if (performAction()) {
-				System.out.println("Agent "+getLocalName()+": Action successfully performed");
-				ACLMessage inform = accept.createReply();
-				inform.setPerformative(ACLMessage.INFORM);
-				return inform;
-			}
-			else {
-				System.out.println("Agent "+getLocalName()+": Action execution failed");
-				throw new FailureException("unexpected-error");
-			}*/
 		}
 
 		protected void handleRejectProposal(ACLMessage cfp, ACLMessage propose, ACLMessage reject) {
@@ -406,11 +385,11 @@ public abstract class Bot extends Entity {
 			super.sendInitiations(initiations);
 		}
 		protected void handlePropose(ACLMessage propose, Vector v) {
-			System.out.println("Agent "+propose.getSender().getName()+" proposed ");
+			//System.out.println("Agent "+propose.getSender().getName()+" proposed ");
 		}
 		
 		protected void handleRefuse(ACLMessage refuse) {
-			System.out.println("Agent "+refuse.getSender().getName()+" refused");
+			//System.out.println("Agent "+refuse.getSender().getName()+" refused");
 		}
 		
 		protected void handleFailure(ACLMessage failure) {
@@ -498,7 +477,6 @@ public abstract class Bot extends Entity {
 		}
 		protected void handleInform(ACLMessage inform) {
 			System.out.println("Agent "+inform.getSender().getName()+" successfully performed the requested action");
-			
 			//retval = FINISHED_CONTRACT; 
 		}
 	}

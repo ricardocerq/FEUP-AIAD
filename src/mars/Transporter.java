@@ -54,7 +54,6 @@ public class Transporter extends Bot {
 	
 	@Override
 	public boolean shouldLeave(Mineral m){
-		System.out.println("should leave " + super.shouldLeave(m) + " " + (carrying + EntityGlobals.getGatherSpeed() > EntityGlobals.getMaxCapacity()));
 		return super.shouldLeave(m) || carrying + EntityGlobals.getGatherSpeed() > EntityGlobals.getMaxCapacity();
 	}
 	
