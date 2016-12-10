@@ -36,6 +36,18 @@ public class EntityGlobals {
 	
 	private static int mineralTimerValue;
 	
+	private static int explorationSubdivisions;
+	
+	private static int maxSpottersContracted;
+	
+	private static int maxProducersContracted;
+	
+	private static int maxTransportersContracted;
+	
+	private static double breakProbability;
+	
+	private static int maxBreakingTicks;
+	
 	public static int getMineralTimerValue() {
 		return mineralTimerValue;
 	}
@@ -168,6 +180,54 @@ public class EntityGlobals {
 
 	public static void setUnloadSpeed(int unloadSpeed) {
 		EntityGlobals.unloadSpeed = unloadSpeed;
+	}
+
+	public static int getExplorationSubdivisions() {
+		return explorationSubdivisions;
+	}
+
+	public static void setExplorationSubdivisions(int explorationSubdivisions) {
+		EntityGlobals.explorationSubdivisions = explorationSubdivisions;
+	}
+
+	public static int getMaxSpottersContracted() {
+		return maxSpottersContracted;
+	}
+
+	public static void setMaxSpottersContracted(int maxSpottersContracted) {
+		EntityGlobals.maxSpottersContracted = maxSpottersContracted;
+	}
+
+	public static int getMaxProducersContracted() {
+		return maxProducersContracted;
+	}
+
+	public static void setMaxProducersContracted(int maxProducersContracted) {
+		EntityGlobals.maxProducersContracted = maxProducersContracted;
+	}
+
+	public static int getMaxTransportersContracted() {
+		return maxTransportersContracted;
+	}
+
+	public static void setMaxTransportersContracted(int maxTransportersContracted) {
+		EntityGlobals.maxTransportersContracted = maxTransportersContracted;
+	}
+
+	public static double getBreakProbability() {
+		return breakProbability;
+	}
+
+	public static void setBreakProbability(double breakProbability) {
+		EntityGlobals.breakProbability = breakProbability;
+	}
+
+	public static int getMaxBreakingTicks() {
+		return maxBreakingTicks;
+	}
+
+	public static void setMaxBreakingTicks(int maxBreakingTicks) {
+		EntityGlobals.maxBreakingTicks = maxBreakingTicks;
 	}
 	
 }

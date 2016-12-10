@@ -61,6 +61,10 @@ public abstract class MineralEntityStyle2D extends DefaultStyleOGL2D {
 
 	@Override
 	public Color getLabelColor(Object object) {
-		return Color.YELLOW;
+		return mineralColor();
+	}
+	@Override
+	public float getRotation(Object object){
+		return 90;
 	}
 }

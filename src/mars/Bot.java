@@ -64,7 +64,8 @@ public abstract class Bot extends Entity {
 	private FSMBehaviour fsm;
 	private Mineral managing;
 	private Map<Mineral, Integer> mineralTimers = new HashMap<>();
-	
+	private boolean[][] explored;
+	private double explorationDirection = 0;
 	private void setMineralTimer(Mineral m){
 		mineralTimers.put(m, EntityGlobals.getMineralTimerValue());
 	}
@@ -145,6 +146,13 @@ public abstract class Bot extends Entity {
 
 		public void action() {
 			updateMineralTimers();
+			int exploringcellx = (int) Math.floor(getX() / (EntityGlobals.getMaxWidth() / EntityGlobals.getExplorationSubdivisions()));
+			int exploringcelly = (int) Math.floor(getY() / (EntityGlobals.getMaxHeight() / EntityGlobals.getExplorationSubdivisions()));
+			//System.out.println("Exploring " + exploringcellx + ", " + exploringcelly);
+			if(!explored[exploringcelly][exploringcellx]){
+				explored[exploringcelly][exploringcellx] = true;
+				explorationDirection = Utils.r.nextDouble();
+			}
 			if(dist(b) > energy - maxRange()){
 				retval = OUT_OF_ENERGY;
 				return;
@@ -164,6 +172,10 @@ public abstract class Bot extends Entity {
 				retval = GO_TO_MINERAL;
 				return;
 			}
+			
+			int exploringcellx = (int) Math.floor(getX() / (EntityGlobals.getMaxWidth() / EntityGlobals.getExplorationSubdivisions()));
+			int exploringcelly = (int) Math.floor(getY() / (EntityGlobals.getMaxHeight() / EntityGlobals.getExplorationSubdivisions()));
+			
 			List<Entity> mineralsCloseBy = getCloseBy(EntityGlobals.getDetectionRange(), Mineral.class, false);
 			Collections.sort(mineralsCloseBy, new Comparator<Entity>(){
 						@Override
@@ -188,27 +200,51 @@ public abstract class Bot extends Entity {
 					mineralsCloseBy.remove(0);
 				}
 			}
-			List<Entity> entitiesCloseBy = getCloseBy(EntityGlobals.getCommRange(), Bot.class, false);
-			if(!entitiesCloseBy.isEmpty()){
-				Bot closest = (Bot) Collections.min(entitiesCloseBy, new Comparator<Entity>(){
-						@Override
-						public int compare(Entity arg0, Entity arg1) {
-							return Double.compare(dist(arg0), dist(arg1));
+			double xwidth = (double) EntityGlobals.getMaxWidth() / EntityGlobals.getExplorationSubdivisions();
+			double yheight = (double) EntityGlobals.getMaxHeight() / EntityGlobals.getExplorationSubdivisions();
+			ArrayList<Point> toExplore = new ArrayList<Point>();
+			for(int dist = 1; dist < EntityGlobals.getExplorationSubdivisions(); dist++){
+				for(int y = exploringcelly - dist; y <= exploringcelly + dist; y++){
+					for(int x = exploringcellx - dist; x <= exploringcellx + dist; x++){
+						if(y == exploringcelly - dist || y == exploringcelly + dist || x == exploringcellx - dist || x == exploringcellx + dist){
+							if(y >= 0 && y < EntityGlobals.getExplorationSubdivisions() && x >= 0 && x < EntityGlobals.getExplorationSubdivisions()){
+								if(!explored[y][x]){
+									toExplore.add(new Point(x+xwidth/2, y+yheight/2));
+									
+								}
+							}
 						}
 					}
-				);
-				if(dist(closest) > dist(0, 0, EntityGlobals.getMaxWidth(), EntityGlobals.getMaxWidth()) / 2){
-					moveRandomTo(closest.getX()-getX(), closest.getY()-getY(), maxRange());
-				} else if(dist(closest) < 5) {
-					moveRandomTo(getX()-closest.getX(), getY()-closest.getY(), maxRange());
-				} else {
+				}
+				if(!toExplore.isEmpty()){
+					break;
+				}
+			}
+			if(!toExplore.isEmpty()){
+				Point p = toExplore.get((int)(explorationDirection*(toExplore.size()-1)));
+				moveTo(p.getX(), p.getY(), maxRange());
+			} else {
+				List<Entity> entitiesCloseBy = getCloseBy(EntityGlobals.getCommRange(), Bot.class, false);
+				if(!entitiesCloseBy.isEmpty()){
+					Bot closest = (Bot) Collections.min(entitiesCloseBy, new Comparator<Entity>(){
+							@Override
+							public int compare(Entity arg0, Entity arg1) {
+								return Double.compare(dist(arg0), dist(arg1));
+							}
+						}
+					);
+					if(dist(closest) > dist(0, 0, EntityGlobals.getMaxWidth(), EntityGlobals.getMaxWidth()) / 2){
+						moveRandomTo(closest.getX()-getX(), closest.getY()-getY(), maxRange());
+					} else if(dist(closest) < 5) {
+						moveRandomTo(getX()-closest.getX(), getY()-closest.getY(), maxRange());
+					} else {
+						moveRandom(maxRange());
+					}
+				}
+				else {
 					moveRandom(maxRange());
 				}
 			}
-			else {
-				moveRandom(maxRange());
-			}
-			
 			//moveTo(Entity.getMaxWidth()/2, Entity.getMaxHeight()/2, maxRange());
 		}
 	}
@@ -303,8 +339,6 @@ public abstract class Bot extends Entity {
 			} catch (CodecException | OntologyException e) {
 				e.printStackTrace();
 			}
-			
-			
 			
 			setMineralTimer(Mineral.getMineral(call.fact.locationx, call.fact.locationy));
 			int amountInteractable = canInteract(call.fact);
@@ -631,6 +665,14 @@ public abstract class Bot extends Entity {
 		fsm2.registerDefaultTransition("Respond", "Respond");*/
 		//addBehaviour(fsm2);
 		addBehaviour(respondCFP());
+		
+		explored = new boolean[EntityGlobals.getExplorationSubdivisions()][EntityGlobals.getExplorationSubdivisions()];
+		for(int j = 0; j < explored.length; j++){
+			for(int i = 0; i < explored[j].length; i++){
+				explored[j][i] = false;
+			}
+		}
+		
 	}   
 	private void registerTransition(String src, String dst, int code){
 		fsm.registerTransition(src, dst, code);

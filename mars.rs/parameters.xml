@@ -75,6 +75,24 @@
 	<parameter name="mineraltimervalue" displayName="mineral timer value"
 		type="int" defaultValue="1000" isReadOnly="false"
 		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="explorationsubdivisions" displayName="subdivisions for exploration"
+		type="int" defaultValue="50" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="maxspotterscontracted" displayName="maximum number of spotters contracted"
+		type="int" defaultValue="3" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="maxproducerscontracted" displayName="maximum number of producers contracted"
+		type="int" defaultValue="3" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="maxtransporterscontracted" displayName="maximum number of producers contracted"
+		type="int" defaultValue="3" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="breakprobability" displayName="propability of breaking"
+		type="double" defaultValue="0.001" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" />
+	<parameter name="maxbreakingticks" displayName="maximum number of ticks spent broken"
+		type="int" defaultValue="1000" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
 </parameters>
 
 

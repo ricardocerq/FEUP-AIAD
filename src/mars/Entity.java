@@ -185,9 +185,9 @@ public abstract class Entity extends Agent {
 		cs.moveTo(this, x, y, 1);
 		grid.moveTo(this, (int) x, (int) y);
 	}
-	int num;
+	//int num;
 	public List<Entity> getCloseBy(double radius, Class c, boolean includeSelf){
-		System.out.println(++num);
+		//System.out.println(++num);
 		double radiusSquare = radius*radius;
 		List<Entity> ret = new ArrayList<>();
 		for(Entity e: entities){

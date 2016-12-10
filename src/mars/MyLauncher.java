@@ -78,6 +78,7 @@ public class MyLauncher extends RepastSLauncher {
 		int numBots = numSpotters + numProducers + numTransporters;
 		
 		int numBases = (Integer)p.getValue("numberofbases");
+		
 		int maxdist = (Integer)p.getValue("maxinitialbotdistance");
 		
 		int numminerals = Math.min((Integer)p.getValue("initialnumberofminerals"), xdim*ydim);
@@ -142,6 +143,29 @@ public class MyLauncher extends RepastSLauncher {
 		
 		EntityGlobals.setMineralTimerValue(mineralTimerValue);
 		
+		int explorationSubdivisions = (Integer)p.getValue("explorationsubdivisions");
+		
+		EntityGlobals.setExplorationSubdivisions(explorationSubdivisions);
+		
+		int maxSpottersContracted = (Integer)p.getValue("maxspotterscontracted");
+		
+		EntityGlobals.setMaxSpottersContracted(maxSpottersContracted);
+		
+		int maxProducersContracted = (Integer)p.getValue("maxproducerscontracted");
+		
+		EntityGlobals.setMaxProducersContracted(maxProducersContracted);
+		
+		int maxTransportersContracted = (Integer)p.getValue("maxtransporterscontracted");
+		
+		EntityGlobals.setMaxTransportersContracted(maxTransportersContracted);
+		
+		double breakProbability = (Double)p.getValue("breakprobability");
+		
+		EntityGlobals.setBreakProbability(breakProbability);
+		
+		int maxBreakingTicks = (Integer)p.getValue("maxbreakingticks");
+		
+		EntityGlobals.setMaxBreakingTicks(maxBreakingTicks);
 		
 		Grid<Object> grid = GridFactoryFinder.createGridFactory(null).createGrid("Simple Grid", context,
 				new GridBuilderParameters<Object>(new repast.simphony.space.grid.WrapAroundBorders(),
