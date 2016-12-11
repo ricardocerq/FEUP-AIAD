@@ -5,6 +5,8 @@ import java.util.List;
 import jade.content.Predicate;
 
 public class DepositFactRequestAnswer implements Predicate {
+	private static final long serialVersionUID = 1L;
+	
 	public List<DepositFact> facts;
 
 	public List<DepositFact> getFacts() {

@@ -4,7 +4,10 @@ import jade.content.Concept;
 import mars.Mineral;
 
 public class DepositFact implements Concept {
+	private static final long serialVersionUID = 1L;
+	
 	public double locationx;
+
 	public double getLocationx() {
 		return locationx;
 	}
@@ -58,8 +61,8 @@ public class DepositFact implements Concept {
 	public boolean scanCompleted;
 	public int amountScanned;
 	public int amountExtracted;
-	
-	public DepositFact(Mineral m, int t){
+
+	public DepositFact(Mineral m, int t) {
 		this.locationx = m.getX();
 		this.locationy = m.getY();
 		this.scanCompleted = m.getScannable() == 0;
@@ -67,9 +70,9 @@ public class DepositFact implements Concept {
 		this.amountScanned = m.getScanned();
 		this.time = t;
 	}
-	
-	public DepositFact(){
-		
+
+	public DepositFact() {
+
 	}
 
 }

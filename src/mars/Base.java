@@ -7,7 +7,7 @@ import repast.simphony.space.grid.Grid;
 public class Base extends Entity {
 	private int gathered;
 
-	public Base(Context<Object> context, ContinuousSpace<Object> cs, Grid<Object> grid, double x, double y){
+	public Base(Context<Object> context, ContinuousSpace<Object> cs, Grid<Object> grid, double x, double y) {
 		super(context, cs, grid, 0, x, y);
 		gathered = 0;
 	}
@@ -20,7 +20,7 @@ public class Base extends Entity {
 	public double maxRange() {
 		return 0;
 	}
-	
+
 	public int getGathered() {
 		return gathered;
 	}

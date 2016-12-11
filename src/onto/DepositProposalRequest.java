@@ -4,20 +4,27 @@ import jade.content.Predicate;
 import mars.Mineral;
 
 public class DepositProposalRequest implements Predicate {
+	private static final long serialVersionUID = 1L;
+	
 	public DepositFact fact;
+
 	public DepositFact getFact() {
 		return fact;
 	}
+
 	public void setFact(DepositFact fact) {
 		this.fact = fact;
 	}
-	public DepositProposalRequest(Mineral m, int t){
+
+	public DepositProposalRequest(Mineral m, int t) {
 		this.fact = new DepositFact(m, t);
 	}
-	public DepositProposalRequest(DepositFact f){
+
+	public DepositProposalRequest(DepositFact f) {
 		this.fact = f;
 	}
-	public DepositProposalRequest(){
+
+	public DepositProposalRequest() {
 	}
-	
+
 }

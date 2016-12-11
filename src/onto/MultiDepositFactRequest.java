@@ -1,6 +1,8 @@
 package onto;
 
 public class MultiDepositFactRequest extends DepositFactRequest {
+	private static final long serialVersionUID = 1L;
+	
 	public int maximumNumber;
 
 	public int getMaximumNumber() {

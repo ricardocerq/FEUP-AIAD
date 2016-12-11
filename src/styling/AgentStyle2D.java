@@ -2,7 +2,6 @@ package styling;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.color.ColorSpace;
 
 import mars.Base;
 import mars.Bot;
@@ -21,7 +20,7 @@ public class AgentStyle2D extends DefaultStyleOGL2D {
 	public Color getColor(Object o) {
 		if (o instanceof Bot) {
 			Color c;
-			if(o instanceof Bot && ((Bot)o).getDisabled())
+			if (o instanceof Bot && ((Bot) o).getDisabled())
 				c = Color.RED;
 			else if (o instanceof Spotter)
 				c = Color.BLUE;
@@ -35,7 +34,6 @@ public class AgentStyle2D extends DefaultStyleOGL2D {
 			hsb[2] = (1 - amount) + (float) (((Bot) o).getEnergy() / EntityGlobals.getMaxEnergy()) * amount;
 
 			return Color.getHSBColor(hsb[0], hsb[1], hsb[2]);
-			// return c;
 		}
 		if (o instanceof Base)
 			return Color.CYAN;
@@ -67,7 +65,7 @@ public class AgentStyle2D extends DefaultStyleOGL2D {
 			Bot b = (Bot) o;
 			String type = "?";
 			if (b instanceof Transporter)
-				type = "T " + ((Transporter)b).getCarrying() + " " ;
+				type = "T " + ((Transporter) b).getCarrying() + " ";
 			else if (b instanceof Spotter)
 				type = "S";
 			else if (b instanceof Producer)
