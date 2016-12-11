@@ -142,25 +142,25 @@ public class MyLauncher extends RepastSLauncher {
 		int maxTransportersContracted = (Integer) p.getValue("maxtransporterscontracted");
 		EntityGlobals.setMaxTransportersContracted(maxTransportersContracted);
 
-		double breakProbability = (Double) p.getValue("breakprobability");
+		double breakProbability = p.getDouble("breakprobability");
 		EntityGlobals.setBreakProbability(breakProbability);
 
 		int maxBreakingTicks = (Integer) p.getValue("maxbreakingticks");
 		EntityGlobals.setMaxBreakingTicks(maxBreakingTicks);
 		
-		boolean costTravelingTime = (Boolean) p.getValue("cost_traveling_time");
+		double costTravelingTime = p.getDouble("cost_traveling_time");
 		EntityGlobals.setCostTravelingTime(costTravelingTime);
 
-		boolean costWorkingTime = (Boolean) p.getValue("cost_working_time");
+		double costWorkingTime = p.getDouble("cost_working_time");
 		EntityGlobals.setCostWorkingTime(costWorkingTime);
 		
-		boolean costTravelingEnergy = (Boolean) p.getValue("cost_traveling_energy");
+		double costTravelingEnergy = p.getDouble("cost_traveling_energy");
 		EntityGlobals.setCostTravelingEnergy(costTravelingEnergy);
 		
-		boolean costWorkingEnergy = (Boolean) p.getValue("cost_working_energy");
+		double costWorkingEnergy = p.getDouble("cost_working_energy");
 		EntityGlobals.setCostWorkingEnergy(costWorkingEnergy);
 		
-		boolean costCarrying = (Boolean) p.getValue("cost_carrying");
+		double costCarrying = p.getDouble("cost_carrying");
 		EntityGlobals.setCostCarrying(costCarrying);
 		
 		boolean decideTravelingEnergy = (Boolean) p.getValue("decide_traveling_energy");

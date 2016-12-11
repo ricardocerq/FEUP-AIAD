@@ -880,25 +880,26 @@ public abstract class Bot extends Entity {
 			return -1;
 		}
 		double cost = 0;
-		if(EntityGlobals.getCostTravelingTime()){
-			cost += travelingTime;
+		if(EntityGlobals.getCostTravelingTime() != 0.0){
+			cost += travelingTime * EntityGlobals.getCostTravelingTime();
 		}
 		
-		if(EntityGlobals.getCostWorkingTime()){
-			cost += workingTime;
+		if(EntityGlobals.getCostWorkingTime() != 0.0){
+			cost += workingTime * EntityGlobals.getCostWorkingTime();
 		}
 		
-		if(EntityGlobals.getCostTravelingEnergy()){
-			cost += travelingEnergySpent;
+		if(EntityGlobals.getCostTravelingEnergy() != 0.0){
+			cost += travelingEnergySpent * EntityGlobals.getCostTravelingEnergy();
 		}
 		
-		if(EntityGlobals.getCostWorkingEnergy()){
-			cost += workingEnergySpent;
+		if(EntityGlobals.getCostWorkingEnergy() != 0.0){
+			cost += workingEnergySpent * EntityGlobals.getCostWorkingEnergy();
 		}
 		
-		if(EntityGlobals.getCostCarrying()){
-			cost += extraCarrying + getCarrying(); 
+		if(EntityGlobals.getCostCarrying() != 0.0){
+			cost += (extraCarrying + getCarrying()) * EntityGlobals.getCostCarrying(); 
 		}
+		
 		return cost;
 	}
 	public int getCarrying(){

@@ -48,15 +48,15 @@ public class EntityGlobals {
 	
 	private static int maxBreakingTicks;
 	
-	private static boolean costTravelingTime;
+	private static double costTravelingTime;
 	
-	private static boolean costWorkingTime;
+	private static double costWorkingTime;
 	
-	private static boolean costTravelingEnergy;
+	private static double costTravelingEnergy;
 	
-	private static boolean costWorkingEnergy;
+	private static double costWorkingEnergy;
 	
-	private static boolean costCarrying;
+	private static double costCarrying;
 	
 	private static boolean decideTravelingEnergy;
 	
@@ -247,43 +247,43 @@ public class EntityGlobals {
 		EntityGlobals.maxBreakingTicks = maxBreakingTicks;
 	}
 
-	public static boolean getCostTravelingTime() {
+	public static double getCostTravelingTime() {
 		return costTravelingTime;
 	}
 
-	public static void setCostTravelingTime(boolean costTravelingTime) {
+	public static void setCostTravelingTime(double costTravelingTime) {
 		EntityGlobals.costTravelingTime = costTravelingTime;
 	}
 
-	public static boolean getCostWorkingTime() {
+	public static double getCostWorkingTime() {
 		return costWorkingTime;
 	}
 
-	public static void setCostWorkingTime(boolean costWorkingTime) {
+	public static void setCostWorkingTime(double costWorkingTime) {
 		EntityGlobals.costWorkingTime = costWorkingTime;
 	}
 
-	public static boolean getCostTravelingEnergy() {
+	public static double getCostTravelingEnergy() {
 		return costTravelingEnergy;
 	}
 
-	public static void setCostTravelingEnergy(boolean costTravelingEnergy) {
+	public static void setCostTravelingEnergy(double costTravelingEnergy) {
 		EntityGlobals.costTravelingEnergy = costTravelingEnergy;
 	}
 
-	public static boolean getCostWorkingEnergy() {
+	public static double getCostWorkingEnergy() {
 		return costWorkingEnergy;
 	}
 
-	public static void setCostWorkingEnergy(boolean costWorkingEnergy) {
+	public static void setCostWorkingEnergy(double costWorkingEnergy) {
 		EntityGlobals.costWorkingEnergy = costWorkingEnergy;
 	}
 
-	public static boolean getCostCarrying() {
+	public static double getCostCarrying() {
 		return costCarrying;
 	}
 
-	public static void setCostCarrying(boolean costCarrying) {
+	public static void setCostCarrying(double costCarrying) {
 		EntityGlobals.costCarrying = costCarrying;
 	}
 
