@@ -606,19 +606,8 @@ public abstract class Bot extends Entity {
 		}
 	}
 
-	@SuppressWarnings("unused")
-	private int evaluateAction() {
-		return (int) (Math.random() * 10);
-	}
-
 	public boolean shouldLeave(Mineral m) {
 		return canInteract(m) <= 0 || insufficientEnergy(energy - EntityGlobals.getPassiveDischarge());
-	}
-
-	@SuppressWarnings("unused")
-	private boolean performAction() {
-		// Simulate action execution by generating a random number
-		return (Math.random() > 0.2);
 	}
 
 	private Behaviour respondCFP() {

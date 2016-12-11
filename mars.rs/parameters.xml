@@ -106,7 +106,7 @@
 	<parameter name="cost_energy_final" displayName="cost: take working energy into account"
 		type="boolean" defaultValue="false" isReadOnly="false"
 		converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter" />
-	<parameter name="cost_carrying" displayName="cost: take carrying energy into account"
+	<parameter name="cost_carrying" displayName="cost: take carrying capcity into account"
 		type="boolean" defaultValue="false" isReadOnly="false"
 		converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter" />
 </parameters>
