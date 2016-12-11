@@ -35,6 +35,7 @@ import onto.DepositProposalRequest;
 import onto.DepositProposalResponse;
 import onto.MarsOntology;
 import repast.simphony.context.Context;
+import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.grid.Grid;
 import sajas.core.Agent;
@@ -51,11 +52,11 @@ import sajas.proto.ContractNetResponder;
 public abstract class Bot extends Entity {
 
 	private double energy; // The energy level of the agent
-	private double heading; // The heading in degrees of the agent
+	//private double heading; // The heading in degrees of the agent
 	private Base b;
 	private List<Mineral> planned = new ArrayList<>();
 
-	private static int nextid = 1;
+	private static int nextid = 0;
 	private int id;
 	private ACLMessage mycfp;
 	private SLCodec codec;
@@ -94,7 +95,10 @@ public abstract class Bot extends Entity {
 		super(context, cs, grid, maxspeed, x, y);
 		this.b = b;
 		id = nextid++;
-		System.out.println("Bot " + id + " Created");
+		
+		if(!RunEnvironment.getInstance().isBatch())
+			System.out.println("Bot " + id + " Created");
+		
 		energy = EntityGlobals.getMaxEnergy();
 
 	}
@@ -121,7 +125,8 @@ public abstract class Bot extends Entity {
 	}
 
 	abstract class InterruptableBehaviour extends SimpleBehaviour implements RetraceableBehaviour {
-
+		private static final long serialVersionUID = 1L;
+		
 		int retval = -1;
 		int prevRetVal = -1;
 
@@ -149,6 +154,8 @@ public abstract class Bot extends Entity {
 	}
 
 	class PowerConsumingBehaviour extends InterruptableBehaviour {
+		private static final long serialVersionUID = 1L;
+		
 		public PowerConsumingBehaviour(String string) {
 			super(string);
 		}
@@ -416,12 +423,16 @@ public abstract class Bot extends Entity {
 			cost += Entity.dist(posx, posy, call.fact.locationx, call.fact.locationy);
 
 			double remainingenergy = getEnergy() - cost;
-			System.out.print(
-					"#" + id + ": received proposal for " + call.fact.locationx + ", " + call.fact.locationy + " ");
+			
+			if(!RunEnvironment.getInstance().isBatch())
+				System.out.print(
+						"#" + id + ": received proposal for " + call.fact.locationx + ", " + call.fact.locationy + " ");
 			if ((planned.size() != 0 && i != planned.size()) || amountInteractable == 0
 					|| insufficientEnergy(remainingenergy)) {
 				proposal.setPerformative(ACLMessage.REFUSE);
-				System.out.println("refusing");
+				
+				if(!RunEnvironment.getInstance().isBatch())
+					System.out.println("Refusing");
 			} else {
 				try {
 					getContentManager().fillContent(proposal, new DepositProposal(call.fact, Bot.this, cost));
@@ -429,7 +440,9 @@ public abstract class Bot extends Entity {
 					e.printStackTrace();
 				}
 				proposal.setPerformative(ACLMessage.PROPOSE);
-				System.out.println("accepting");
+				
+				if(!RunEnvironment.getInstance().isBatch())
+					System.out.println("Accepting");
 			}
 
 			return proposal;
@@ -453,7 +466,8 @@ public abstract class Bot extends Entity {
 		}
 
 		protected void handleRejectProposal(ACLMessage cfp, ACLMessage propose, ACLMessage reject) {
-			System.out.println("Agent " + getLocalName() + ": Proposal rejected");
+			if(!RunEnvironment.getInstance().isBatch())
+				System.out.println("Agent " + getLocalName() + ": Proposal rejected");
 		}
 	}
 
@@ -464,14 +478,17 @@ public abstract class Bot extends Entity {
 			super(a, cfp);
 		}
 
+		@SuppressWarnings("rawtypes")
 		protected Vector prepareCfps(ACLMessage cfp) {
 			return super.prepareCfps(cfp);
 		}
 
+		@SuppressWarnings("rawtypes")
 		protected void sendInitiations(Vector initiations) {
 			super.sendInitiations(initiations);
 		}
 
+		@SuppressWarnings("rawtypes")
 		protected void handlePropose(ACLMessage propose, Vector v) {
 			// System.out.println("Agent "+propose.getSender().getName()+"
 			// proposed ");
@@ -492,7 +509,7 @@ public abstract class Bot extends Entity {
 			}
 		}
 
-		@SuppressWarnings("rawtypes")
+		@SuppressWarnings({ "rawtypes", "unchecked" })
 		protected void handleAllResponses(Vector responses, Vector acceptances) {
 
 			List<Map.Entry<DepositProposal, ACLMessage>> proposalsScan = new ArrayList<>();
