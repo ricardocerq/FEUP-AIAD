@@ -828,8 +828,8 @@ public abstract class Bot extends Entity {
 			}
 			double dist = Entity.dist(posx, posy, planned.get(i).getX(), planned.get(i).getY());
 			
-			travelingTime += dist;
-			workingEnergySpent += dist;
+			travelingTime += dist / EntityGlobals.getEntityMaxSpeed();
+			travelingEnergySpent += dist;
 			
 			int timeWorkingtemp = (int) Math.ceil(((double)canInteract(planned.get(i))) / getInteractionSpeed());
 			double energyWorkingtemp = timeWorkingtemp * EntityGlobals.getPassiveDischarge();
