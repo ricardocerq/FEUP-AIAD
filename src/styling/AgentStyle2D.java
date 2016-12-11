@@ -21,7 +21,9 @@ public class AgentStyle2D extends DefaultStyleOGL2D {
 	public Color getColor(Object o) {
 		if (o instanceof Bot) {
 			Color c;
-			if (o instanceof Spotter)
+			if(o instanceof Bot && ((Bot)o).getDisabled())
+				c = Color.RED;
+			else if (o instanceof Spotter)
 				c = Color.BLUE;
 			else if (o instanceof Producer)
 				c = Color.YELLOW;

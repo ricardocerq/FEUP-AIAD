@@ -66,6 +66,8 @@ public abstract class Bot extends Entity {
 	private Map<Mineral, Integer> mineralTimers = new HashMap<>();
 	private boolean[][] explored;
 	private double explorationDirection = 0;
+	private boolean disabled = false;
+	private int ticksToEnabled = 0;
 	private void setMineralTimer(Mineral m){
 		mineralTimers.put(m, EntityGlobals.getMineralTimerValue());
 	}
@@ -145,6 +147,18 @@ public abstract class Bot extends Entity {
 		}
 
 		public void action() {
+			if(disabled){
+				ticksToEnabled--;
+				if(ticksToEnabled == 0){
+					disabled = false;
+				}
+				return;
+			} else {
+				if(Utils.r.nextDouble() < EntityGlobals.getBreakProbability()){
+					disabled = true;
+					ticksToEnabled = Utils.r.nextInt(EntityGlobals.getMaxBreakingTicks());
+				}
+			}
 			updateMineralTimers();
 			int exploringcellx = (int) Math.floor(getX() / (EntityGlobals.getMaxWidth() / EntityGlobals.getExplorationSubdivisions()));
 			int exploringcelly = (int) Math.floor(getY() / (EntityGlobals.getMaxHeight() / EntityGlobals.getExplorationSubdivisions()));
@@ -167,6 +181,8 @@ public abstract class Bot extends Entity {
 		public void action() {
 			super.action();
 			if(retval != -1)
+				return;
+			if(disabled)
 				return;
 			if(!planned.isEmpty()){
 				retval = GO_TO_MINERAL;
@@ -257,6 +273,8 @@ public abstract class Bot extends Entity {
 			super.action();
 			if(retval != -1)
 				return;
+			if(disabled)
+				return;
 			if(planned.isEmpty()){
 				retval = NO_PLAN;
 				return;
@@ -332,6 +350,9 @@ public abstract class Bot extends Entity {
 		}
 		@Override
 		protected ACLMessage handleCfp(ACLMessage cfp) throws NotUnderstoodException, RefuseException {
+			if(disabled){
+				throw new jade.domain.FIPAAgentManagement.NotUnderstoodException("Bot is disabled");
+			}
 			DepositProposalRequest call = null;
 			
 			try {
@@ -494,17 +515,30 @@ public abstract class Bot extends Entity {
 //				elem.getValue().setPerformative(ACLMessage.ACCEPT_PROPOSAL);
 //				System.out.println("#" + id +" : accepting proposal, sending message");
 //			}
+			int numSpotters = 0;
 			for(Map.Entry<DepositProposal, ACLMessage> elem : proposalsScan){
+				if(numSpotters >= EntityGlobals.getMaxSpottersContracted()){
+					break;
+				}
+				numSpotters++;
 				elem.getValue().setPerformative(ACLMessage.ACCEPT_PROPOSAL);
 				System.out.println("#" + id +" : accepting proposal, sending message");
 			}
-			
+			int numProducers = 0;
 			for(Map.Entry<DepositProposal, ACLMessage> elem : proposalsExtract){
+				if(numProducers >= EntityGlobals.getMaxProducersContracted()){
+					break;
+				}
+				numProducers++;
 				elem.getValue().setPerformative(ACLMessage.ACCEPT_PROPOSAL);
 				System.out.println("#" + id +" : accepting proposal, sending message");
 			}
-			
+			int numTransporters = 0;
 			for(Map.Entry<DepositProposal, ACLMessage> elem : proposalsTransport){
+				if(numTransporters >= EntityGlobals.getMaxTransportersContracted()){
+					break;
+				}
+				numTransporters++;
 				elem.getValue().setPerformative(ACLMessage.ACCEPT_PROPOSAL);
 				System.out.println("#" + id +" : accepting proposal, sending message");
 			}
@@ -740,6 +774,9 @@ public abstract class Bot extends Entity {
 		int timeToCharge = (int) Math.ceil(((double) EntityGlobals.getMaxCapacity() - energyLevel)/EntityGlobals.getRechargeRate());
 		int timeToUnload= (int) Math.ceil(((double) carrying)/EntityGlobals.getUnloadSpeed());
 		return Math.max(timeToCharge, timeToUnload);
+	}
+	public boolean getDisabled() {
+		return disabled;
 	}
 }
 
