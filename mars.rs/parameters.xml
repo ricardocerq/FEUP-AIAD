@@ -24,11 +24,11 @@
 	<parameter name="initialnumberofminerals" displayName="initial number of minerals"
 		type="int" defaultValue="50" isReadOnly="false"
 		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
-	<parameter name="xdim" displayName="xdim"
-		type="int" defaultValue="50" isReadOnly="false"
+	<parameter name="xdim" displayName="xdim" type="int"
+		defaultValue="50" isReadOnly="false"
 		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
-	<parameter name="ydim" displayName="ydim"
-		type="int" defaultValue="50" isReadOnly="false"
+	<parameter name="ydim" displayName="ydim" type="int"
+		defaultValue="50" isReadOnly="false"
 		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
 	<parameter name="numberofbases" displayName="number of bases"
 		type="int" defaultValue="1" isReadOnly="false"
@@ -36,8 +36,8 @@
 	<parameter name="maxinitialbotdistance" displayName="max initial bot distance"
 		type="int" defaultValue="10" isReadOnly="false"
 		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
-	<parameter name="maxspeed" displayName="max bot speed"
-		type="double" defaultValue=".05" isReadOnly="false"
+	<parameter name="maxspeed" displayName="max bot speed" type="double"
+		defaultValue=".05" isReadOnly="false"
 		converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" />
 	<parameter name="maxenergy" displayName="max bot energy"
 		type="double" defaultValue="100" isReadOnly="false"
@@ -93,6 +93,22 @@
 	<parameter name="maxbreakingticks" displayName="maximum number of ticks spent broken"
 		type="int" defaultValue="1000" isReadOnly="false"
 		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+		
+	<parameter name="cost_time" displayName="cost: take traveling time into account"
+		type="boolean" defaultValue="true" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter" />
+	<parameter name="cost_energy" displayName="cost: discard if not enough energy"
+		type="boolean" defaultValue="false" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter" />
+	<parameter name="cost_working_time" displayName="cost: take working time into account"
+		type="boolean" defaultValue="false" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter" />
+	<parameter name="cost_energy_final" displayName="cost: take working energy into account"
+		type="boolean" defaultValue="false" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter" />
+	<parameter name="cost_carrying" displayName="cost: take carrying energy into account"
+		type="boolean" defaultValue="false" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter" />
 </parameters>
 
 

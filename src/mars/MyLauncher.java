@@ -86,89 +86,83 @@ public class MyLauncher extends RepastSLauncher {
 		int numminerals = Math.min((Integer) p.getValue("initialnumberofminerals"), xdim * ydim);
 
 		int minMineralValue = (Integer) p.getValue("minmineralvalue");
-
 		EntityGlobals.setMinMineralValue(minMineralValue);
 
 		int maxMineralValue = (Integer) p.getValue("maxmineralvalue");
-
 		EntityGlobals.setMaxMineralValue(maxMineralValue);
 
 		double maxspeed = (Double) p.getValue("maxspeed");
-
 		EntityGlobals.setEntityMaxSpeed(maxspeed);
 
 		double maxenergy = (Double) p.getValue("maxenergy");
-
 		EntityGlobals.setMaxEnergy(maxenergy);
 
 		double rechargeRate = (Double) p.getValue("rechargerate");
-
 		EntityGlobals.setRechargeRate(rechargeRate);
 
 		double commRange = (Double) p.getValue("commrange");
-
 		EntityGlobals.setCommRange(commRange);
 
 		double detectionRange = (Double) p.getValue("detectionrange");
-
 		EntityGlobals.setDetectionRange(detectionRange);
 
 		double interactionRange = (Double) p.getValue("interactionrange");
-
 		EntityGlobals.setInteractionRange(interactionRange);
 
 		double passiveDischarge = (Double) p.getValue("passivedischarge");
-
 		EntityGlobals.setPassiveDischarge(passiveDischarge);
 
 		int scanSpeed = (Integer) p.getValue("scanspeed");
-
 		EntityGlobals.setScanSpeed(scanSpeed);
 
 		int extractionSpeed = (Integer) p.getValue("extractionspeed");
-
 		EntityGlobals.setExtractionSpeed(extractionSpeed);
 
 		int gatherSpeed = (Integer) p.getValue("gatherspeed");
-
 		EntityGlobals.setGatherSpeed(gatherSpeed);
 
 		int unloadSpeed = (Integer) p.getValue("unloadspeed");
-
 		EntityGlobals.setUnloadSpeed(unloadSpeed);
 
 		int maxCapacity = (Integer) p.getValue("maxcapacity");
-
 		EntityGlobals.setMaxCapacity(maxCapacity);
 
 		int mineralTimerValue = (Integer) p.getValue("mineraltimervalue");
-
 		EntityGlobals.setMineralTimerValue(mineralTimerValue);
 
 		int explorationSubdivisions = (Integer) p.getValue("explorationsubdivisions");
-
 		EntityGlobals.setExplorationSubdivisions(explorationSubdivisions);
 
 		int maxSpottersContracted = (Integer) p.getValue("maxspotterscontracted");
-
 		EntityGlobals.setMaxSpottersContracted(maxSpottersContracted);
 
 		int maxProducersContracted = (Integer) p.getValue("maxproducerscontracted");
-
 		EntityGlobals.setMaxProducersContracted(maxProducersContracted);
 
 		int maxTransportersContracted = (Integer) p.getValue("maxtransporterscontracted");
-
 		EntityGlobals.setMaxTransportersContracted(maxTransportersContracted);
 
 		double breakProbability = (Double) p.getValue("breakprobability");
-
 		EntityGlobals.setBreakProbability(breakProbability);
 
 		int maxBreakingTicks = (Integer) p.getValue("maxbreakingticks");
-
 		EntityGlobals.setMaxBreakingTicks(maxBreakingTicks);
+		
+		boolean costTime = (Boolean) p.getValue("cost_time");
+		EntityGlobals.setCostTime(costTime);
 
+		boolean costEnergy = (Boolean) p.getValue("cost_energy");
+		EntityGlobals.setCostEnergy(costEnergy);
+		
+		boolean costWorkingTime = (Boolean) p.getValue("cost_working_time");
+		EntityGlobals.setCostWorkingTime(costWorkingTime);
+		
+		boolean costEnergyFinal = (Boolean) p.getValue("cost_energy_final");
+		EntityGlobals.setCostEnergyFinal(costEnergyFinal);
+		
+		boolean costCarrying = (Boolean) p.getValue("cost_carrying");
+		EntityGlobals.setCostCarrying(costCarrying);
+		
 		Grid<Object> grid = GridFactoryFinder.createGridFactory(null).createGrid("Simple Grid", context,
 				new GridBuilderParameters<Object>(new repast.simphony.space.grid.WrapAroundBorders(),
 						new SimpleGridAdder<Object>(), true, xdim, ydim));

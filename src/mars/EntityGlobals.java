@@ -48,6 +48,16 @@ public class EntityGlobals {
 	
 	private static int maxBreakingTicks;
 	
+	private static boolean costTime;
+	
+	private static boolean costEnergy;
+	
+	private static boolean costWorkingTime;
+	
+	private static boolean costEnergyFinal;
+	
+	private static boolean costCarrying;
+	
 	public static int getMineralTimerValue() {
 		return mineralTimerValue;
 	}
@@ -228,6 +238,46 @@ public class EntityGlobals {
 
 	public static void setMaxBreakingTicks(int maxBreakingTicks) {
 		EntityGlobals.maxBreakingTicks = maxBreakingTicks;
+	}
+
+	public static boolean isCostTime() {
+		return costTime;
+	}
+
+	public static void setCostTime(boolean costTime) {
+		EntityGlobals.costTime = costTime;
+	}
+
+	public static boolean isCostEnergy() {
+		return costEnergy;
+	}
+
+	public static void setCostEnergy(boolean costEnergy) {
+		EntityGlobals.costEnergy = costEnergy;
+	}
+
+	public static boolean isCostWorkingTime() {
+		return costWorkingTime;
+	}
+
+	public static void setCostWorkingTime(boolean costWorkingTime) {
+		EntityGlobals.costWorkingTime = costWorkingTime;
+	}
+
+	public static boolean isCostEnergyFinal() {
+		return costEnergyFinal;
+	}
+
+	public static void setCostEnergyFinal(boolean costEnergyFinal) {
+		EntityGlobals.costEnergyFinal = costEnergyFinal;
+	}
+
+	public static boolean isCostCarrying() {
+		return costCarrying;
+	}
+
+	public static void setCostCarrying(boolean costCarrying) {
+		EntityGlobals.costCarrying = costCarrying;
 	}
 	
 }

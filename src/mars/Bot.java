@@ -62,6 +62,7 @@ public abstract class Bot extends Entity {
 	private SLCodec codec;
 	private Ontology onto;
 	private FSMBehaviour fsm;
+	@SuppressWarnings("unused")
 	private Mineral managing;
 	private Map<Mineral, Integer> mineralTimers = new HashMap<>();
 	private boolean[][] explored;
@@ -107,9 +108,9 @@ public abstract class Bot extends Entity {
 	private static final int RECHARGED = 2;
 	private static final int FOUND_MINERAL = 3;
 	private static final int NO_PLAN = 4;
-	private static final int HAVE_PLANNED = 5;
+	// private static final int HAVE_PLANNED = 5;
 	private static final int NEW_CONTRACT = 6;
-	private static final int FINISHED_CONTRACT = 7;
+	// private static final int FINISHED_CONTRACT = 7;
 	private static final int GO_TO_MINERAL = 8;
 
 	private static final String WANDER_B = "Wander";
@@ -118,7 +119,7 @@ public abstract class Bot extends Entity {
 	private static final String EXECUTE_B = "Execute";
 	private static final String START_INIT_CONTRACT_NET_B = "StartInitContractNet";
 	private static final String INIT_CONTRACT_NET_B = "InitContractNet";
-	private static final String RESPOND_CONTRACT_NET_B = "RespondContractNet";
+	// private static final String RESPOND_CONTRACT_NET_B = "RespondContractNet";
 
 	interface RetraceableBehaviour {
 		public int getPreviousReturnValue();
@@ -395,7 +396,7 @@ public abstract class Bot extends Entity {
 			setMineralTimer(Mineral.getMineral(call.fact.locationx, call.fact.locationy));
 			int amountInteractable = canInteract(call.fact);
 			ACLMessage proposal = cfp.createReply();
-
+			
 			// proposal.setPerformative(ACLMessage.REFUSE);
 			double cost = 0;
 			// double currEnergy = energy;
