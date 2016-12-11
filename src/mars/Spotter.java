@@ -29,4 +29,9 @@ public class Spotter extends Bot{
 		return min.scanCompleted? 0 : Mineral.averageAmount() ;
 	}
 
+	@Override
+	protected int getInteractionSpeed() {
+		return EntityGlobals.getScanSpeed();
+	}
+
 }

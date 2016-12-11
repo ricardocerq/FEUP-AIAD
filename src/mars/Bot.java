@@ -394,42 +394,15 @@ public abstract class Bot extends Entity {
 			}
 
 			setMineralTimer(Mineral.getMineral(call.fact.locationx, call.fact.locationy));
-			int amountInteractable = canInteract(call.fact);
 			ACLMessage proposal = cfp.createReply();
-			
-			// proposal.setPerformative(ACLMessage.REFUSE);
-			double cost = 0;
-			// double currEnergy = energy;
-			// int currCarrying = 0;
-			double posx = getX();
-			double posy = getY();
-			int i;
-
-			for (i = 0; i < planned.size(); i++) {
-				if (Utils.aproxSame(call.fact.locationx, planned.get(i).getX())
-						&& Utils.aproxSame(call.fact.locationy, planned.get(i).getY())) {
-					// System.out.println("Already planned");
-					break;
-				}
-				// if(insufficientEnergy(currEnergy - maxRange())){
-				// cost += Entity.dist(posx, posy, b.getX(), b.getY());
-				// cost += timeToLeaveBase(currEnergy, carrying);
-				// } else {
-				cost += Entity.dist(posx, posy, planned.get(i).getX(), planned.get(i).getY());
-				// }
-
-				posx = planned.get(i).getX();
-				posy = planned.get(i).getY();
-			}
-			cost += Entity.dist(posx, posy, call.fact.locationx, call.fact.locationy);
-
-			double remainingenergy = getEnergy() - cost;
 			
 			if(!RunEnvironment.getInstance().isBatch())
 				System.out.print(
 						"#" + id + ": received proposal for " + call.fact.locationx + ", " + call.fact.locationy + " ");
-			if ((planned.size() != 0 && i != planned.size()) || amountInteractable == 0
-					|| insufficientEnergy(remainingenergy)) {
+			
+			double cost = getCost(call);
+			
+			if (cost < 0) {
 				proposal.setPerformative(ACLMessage.REFUSE);
 				
 				if(!RunEnvironment.getInstance().isBatch())
@@ -785,9 +758,6 @@ public abstract class Bot extends Entity {
 		return ret;
 	}
 
-	protected abstract int canInteract(Mineral min);
-
-	protected abstract int canInteract(DepositFact min);
 
 	protected void takeDown() {
 		try {
@@ -836,4 +806,113 @@ public abstract class Bot extends Entity {
 	public boolean getDisabled() {
 		return disabled;
 	}
+	
+	protected  double getCost(DepositProposalRequest call){
+		int amountInteractable = canInteract(call.fact);
+		if(amountInteractable == 0)
+			return -1;
+		
+		double posx = getX();
+		double posy = getY();
+		
+		int travelingTime = 0;
+		int workingTime = 0;
+		double travelingEnergySpent = 0;
+		double workingEnergySpent = 0;
+		int extraCarrying = 0;
+		
+		for (int i = 0; i < planned.size(); i++) {
+			if (Utils.aproxSame(call.fact.locationx, planned.get(i).getX())
+					&& Utils.aproxSame(call.fact.locationy, planned.get(i).getY())) {
+				return -1;
+			}
+			double dist = Entity.dist(posx, posy, planned.get(i).getX(), planned.get(i).getY());
+			
+			travelingTime += dist;
+			workingEnergySpent += dist;
+			
+			int timeWorkingtemp = (int) Math.ceil(((double)canInteract(planned.get(i))) / getInteractionSpeed());
+			double energyWorkingtemp = timeWorkingtemp * EntityGlobals.getPassiveDischarge();
+			
+			workingTime+= timeWorkingtemp;
+			workingEnergySpent += energyWorkingtemp;
+			
+			extraCarrying += getCarryable(planned.get(i));
+			
+			posx = planned.get(i).getX();
+			posy = planned.get(i).getY();
+		}
+		
+		
+		double dist = Entity.dist(posx, posy, call.fact.locationx, call.fact.locationy);
+		
+		travelingTime += dist;
+		workingEnergySpent += dist;
+		
+		int timeWorkingtemp = (int) Math.ceil(((double)canInteract(call.fact)) / getInteractionSpeed());
+		double energyWorkingtemp = timeWorkingtemp * EntityGlobals.getPassiveDischarge();
+		
+		workingTime+= timeWorkingtemp;
+		workingEnergySpent += energyWorkingtemp;
+		
+		
+		//double remainingenergy = getEnergy() - cost;
+		
+		double decideEnergySpent = 0;
+		if(EntityGlobals.getDecideTravelingEnergy()){
+			decideEnergySpent += travelingEnergySpent;
+		}
+		if(EntityGlobals.getDecideWorkingEnergy()){
+			decideEnergySpent += workingEnergySpent;
+		}
+		
+		if(insufficientEnergy(getEnergy() - decideEnergySpent)){
+			return -1;
+		}
+		
+		int decideCarrying = 0;
+		
+		if(EntityGlobals.getDecideCapacity()){
+			decideCarrying += extraCarrying;
+		}
+		
+		if(getCarrying() + decideCarrying >= EntityGlobals.getMaxCapacity()){
+			return -1;
+		}
+		double cost = 0;
+		if(EntityGlobals.getCostTravelingTime()){
+			cost += travelingTime;
+		}
+		
+		if(EntityGlobals.getCostWorkingTime()){
+			cost += workingTime;
+		}
+		
+		if(EntityGlobals.getCostTravelingEnergy()){
+			cost += travelingEnergySpent;
+		}
+		
+		if(EntityGlobals.getCostWorkingEnergy()){
+			cost += workingEnergySpent;
+		}
+		
+		if(EntityGlobals.getCostCarrying()){
+			cost += extraCarrying + getCarrying(); 
+		}
+		return cost;
+	}
+	public int getCarrying(){
+		return 0;
+	}
+	public int getCarryable(Mineral mmin){
+		return 0;
+	}
+	public int getCarryable(DepositFact min){
+		return 0;
+	}
+	protected abstract int canInteract(Mineral min);
+
+	protected abstract int canInteract(DepositFact min);
+	
+	protected abstract int getInteractionSpeed();
 }

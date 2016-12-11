@@ -48,15 +48,22 @@ public class EntityGlobals {
 	
 	private static int maxBreakingTicks;
 	
-	private static boolean costTime;
-	
-	private static boolean costEnergy;
+	private static boolean costTravelingTime;
 	
 	private static boolean costWorkingTime;
 	
-	private static boolean costEnergyFinal;
+	private static boolean costTravelingEnergy;
+	
+	private static boolean costWorkingEnergy;
 	
 	private static boolean costCarrying;
+	
+	private static boolean decideTravelingEnergy;
+	
+	private static boolean decideWorkingEnergy;
+	
+	
+	private static boolean decideCapacity;
 	
 	public static int getMineralTimerValue() {
 		return mineralTimerValue;
@@ -240,23 +247,15 @@ public class EntityGlobals {
 		EntityGlobals.maxBreakingTicks = maxBreakingTicks;
 	}
 
-	public static boolean isCostTime() {
-		return costTime;
+	public static boolean getCostTravelingTime() {
+		return costTravelingTime;
 	}
 
-	public static void setCostTime(boolean costTime) {
-		EntityGlobals.costTime = costTime;
+	public static void setCostTravelingTime(boolean costTravelingTime) {
+		EntityGlobals.costTravelingTime = costTravelingTime;
 	}
 
-	public static boolean isCostEnergy() {
-		return costEnergy;
-	}
-
-	public static void setCostEnergy(boolean costEnergy) {
-		EntityGlobals.costEnergy = costEnergy;
-	}
-
-	public static boolean isCostWorkingTime() {
+	public static boolean getCostWorkingTime() {
 		return costWorkingTime;
 	}
 
@@ -264,20 +263,55 @@ public class EntityGlobals {
 		EntityGlobals.costWorkingTime = costWorkingTime;
 	}
 
-	public static boolean isCostEnergyFinal() {
-		return costEnergyFinal;
+	public static boolean getCostTravelingEnergy() {
+		return costTravelingEnergy;
 	}
 
-	public static void setCostEnergyFinal(boolean costEnergyFinal) {
-		EntityGlobals.costEnergyFinal = costEnergyFinal;
+	public static void setCostTravelingEnergy(boolean costTravelingEnergy) {
+		EntityGlobals.costTravelingEnergy = costTravelingEnergy;
 	}
 
-	public static boolean isCostCarrying() {
+	public static boolean getCostWorkingEnergy() {
+		return costWorkingEnergy;
+	}
+
+	public static void setCostWorkingEnergy(boolean costWorkingEnergy) {
+		EntityGlobals.costWorkingEnergy = costWorkingEnergy;
+	}
+
+	public static boolean getCostCarrying() {
 		return costCarrying;
 	}
 
 	public static void setCostCarrying(boolean costCarrying) {
 		EntityGlobals.costCarrying = costCarrying;
 	}
+
+
+	public static boolean getDecideCapacity() {
+		return decideCapacity;
+	}
+
+	public static void setDecideCapacity(boolean decideCapacity) {
+		EntityGlobals.decideCapacity = decideCapacity;
+	}
+
+	public static boolean getDecideTravelingEnergy() {
+		return decideTravelingEnergy;
+	}
+
+	public static void setDecideTravelingEnergy(boolean decideTravelingEnergy) {
+		EntityGlobals.decideTravelingEnergy = decideTravelingEnergy;
+	}
+
+	public static boolean getDecideWorkingEnergy() {
+		return decideWorkingEnergy;
+	}
+
+	public static void setDecideWorkingEnergy(boolean decideWorkingEnergy) {
+		EntityGlobals.decideWorkingEnergy = decideWorkingEnergy;
+	}
+
+
 	
 }

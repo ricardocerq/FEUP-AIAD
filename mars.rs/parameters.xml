@@ -94,21 +94,32 @@
 		type="int" defaultValue="1000" isReadOnly="false"
 		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
 		
-	<parameter name="cost_time" displayName="cost: take traveling time into account"
+	<parameter name="cost_traveling_time" displayName="cost: take traveling time into account"
 		type="boolean" defaultValue="true" isReadOnly="false"
-		converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter" />
-	<parameter name="cost_energy" displayName="cost: discard if not enough energy"
-		type="boolean" defaultValue="false" isReadOnly="false"
 		converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter" />
 	<parameter name="cost_working_time" displayName="cost: take working time into account"
 		type="boolean" defaultValue="false" isReadOnly="false"
 		converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter" />
-	<parameter name="cost_energy_final" displayName="cost: take working energy into account"
+	<parameter name="cost_traveling_energy" displayName="cost: take traveling energy into account"
 		type="boolean" defaultValue="false" isReadOnly="false"
 		converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter" />
-	<parameter name="cost_carrying" displayName="cost: take carrying capcity into account"
+	<parameter name="cost_working_energy" displayName="cost: take working energy into account"
 		type="boolean" defaultValue="false" isReadOnly="false"
 		converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter" />
+	<parameter name="cost_carrying" displayName="cost: take carrying capacity into account"
+		type="boolean" defaultValue="false" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter" />
+		
+	<parameter name="decide_energy" displayName="discard cfp if not enough energy"
+		type="boolean" defaultValue="true" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter" />
+		
+	<parameter name="decide_capacity" displayName="cost: discard if not enough capacity"
+		type="boolean" defaultValue="false" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter" />
+	
+	
+	
 </parameters>
 
 

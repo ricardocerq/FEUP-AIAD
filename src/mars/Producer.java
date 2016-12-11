@@ -29,4 +29,9 @@ public class Producer extends Bot{
 		return min.amountScanned;
 	}
 
+	@Override
+	protected int getInteractionSpeed() {
+		return EntityGlobals.getExtractionSpeed();
+	}
+
 }

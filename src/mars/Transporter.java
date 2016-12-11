@@ -56,8 +56,22 @@ public class Transporter extends Bot {
 	public boolean shouldLeave(Mineral m){
 		return super.shouldLeave(m) || carrying + EntityGlobals.getGatherSpeed() > EntityGlobals.getMaxCapacity();
 	}
-	
+	@Override
 	public int getCarrying() {
 		return carrying;
+	}
+
+	@Override
+	protected int getInteractionSpeed() {
+		return EntityGlobals.getUnloadSpeed();
+	}
+	
+	@Override
+	public int getCarryable(Mineral min){
+		return min.getExtracted();
+	}
+	@Override
+	public int getCarryable(DepositFact min){
+		return min.getAmountExtracted();
 	}
 }

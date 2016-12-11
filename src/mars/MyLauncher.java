@@ -148,20 +148,29 @@ public class MyLauncher extends RepastSLauncher {
 		int maxBreakingTicks = (Integer) p.getValue("maxbreakingticks");
 		EntityGlobals.setMaxBreakingTicks(maxBreakingTicks);
 		
-		boolean costTime = (Boolean) p.getValue("cost_time");
-		EntityGlobals.setCostTime(costTime);
+		boolean costTravelingTime = (Boolean) p.getValue("cost_traveling_time");
+		EntityGlobals.setCostTravelingTime(costTravelingTime);
 
-		boolean costEnergy = (Boolean) p.getValue("cost_energy");
-		EntityGlobals.setCostEnergy(costEnergy);
-		
 		boolean costWorkingTime = (Boolean) p.getValue("cost_working_time");
 		EntityGlobals.setCostWorkingTime(costWorkingTime);
 		
-		boolean costEnergyFinal = (Boolean) p.getValue("cost_energy_final");
-		EntityGlobals.setCostEnergyFinal(costEnergyFinal);
+		boolean costTravelingEnergy = (Boolean) p.getValue("cost_traveling_energy");
+		EntityGlobals.setCostTravelingEnergy(costTravelingEnergy);
+		
+		boolean costWorkingEnergy = (Boolean) p.getValue("cost_working_energy");
+		EntityGlobals.setCostWorkingEnergy(costWorkingEnergy);
 		
 		boolean costCarrying = (Boolean) p.getValue("cost_carrying");
 		EntityGlobals.setCostCarrying(costCarrying);
+		
+		boolean decideTravelingEnergy = (Boolean) p.getValue("decide_traveling_energy");
+		EntityGlobals.setDecideTravelingEnergy(decideTravelingEnergy);
+		
+		boolean decideWorkingEnergy = (Boolean) p.getValue("decide_working_energy");
+		EntityGlobals.setDecideWorkingEnergy(decideWorkingEnergy);
+		
+		boolean decideCapacity = (Boolean) p.getValue("decide_capacity");
+		EntityGlobals.setDecideCapacity(decideCapacity);
 		
 		Grid<Object> grid = GridFactoryFinder.createGridFactory(null).createGrid("Simple Grid", context,
 				new GridBuilderParameters<Object>(new repast.simphony.space.grid.WrapAroundBorders(),
