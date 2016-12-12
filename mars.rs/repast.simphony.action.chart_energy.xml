@@ -1,6 +1,6 @@
 <repast.simphony.chart2.engine.TimeSeriesChartDescriptor>
 	<name>Resources</name>
-	<dataSet>Resources</dataSet>
+	<dataSet>Data Set 1</dataSet>
 	<xAxisLabel>Time</xAxisLabel>
 	<yAxisLabel>Resources</yAxisLabel>
 	<chartTitle>Resources</chartTitle>

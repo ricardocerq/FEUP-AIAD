@@ -1,5 +1,5 @@
 <repast.simphony.data2.engine.DataSetDescriptor>
-	<name>Resources</name>
+	<name>Data Set 1</name>
 	<type>AGGREGATE</type>
 	<inclTick>true</inclTick>
 	<inclBatchRun>false</inclBatchRun>
@@ -21,7 +21,16 @@
 				<id>Resources Gathered</id>
 				<className>mars.Base</className>
 				<methodName>getGathered</methodName>
-				<aggType>MEAN</aggType>
+				<aggType>SUM</aggType>
+			</repast.simphony.data2.engine.MethodDataSourceDefinition>
+		</entry>
+		<entry>
+			<string>Total Energy</string>
+			<repast.simphony.data2.engine.MethodDataSourceDefinition>
+				<id>Total Energy</id>
+				<className>mars.Bot</className>
+				<methodName>getEnergy</methodName>
+				<aggType>SUM</aggType>
 			</repast.simphony.data2.engine.MethodDataSourceDefinition>
 		</entry>
 	</methodDataSources>
