@@ -54,8 +54,8 @@ public abstract class Entity extends Agent {
 	}
 
 	public Entity(Context<Object> context, ContinuousSpace<Object> cs, Grid<Object> grid, double maxspeed) {
-		this(context, cs, grid, maxspeed, Math.random() * EntityGlobals.getMaxWidth(),
-				Math.random() * EntityGlobals.getMaxHeight());
+		this(context, cs, grid, maxspeed, Utils.r.nextDouble() * EntityGlobals.getMaxWidth(),
+				Utils.r.nextDouble() * EntityGlobals.getMaxHeight());
 	}
 
 	public double getX() {
@@ -124,11 +124,11 @@ public abstract class Entity extends Agent {
 
 	private double randomTurn() {
 		double ang;
-		double sgn = Math.random() - 0.5;
+		double sgn = Utils.r.nextDouble() - 0.5;
 		if (sgn > 0)
-			ang = heading + Math.random() * Math.PI / 8;
+			ang = heading + Utils.r.nextDouble() * Math.PI / 8;
 		else
-			ang = heading - Math.random() * Math.PI / 8;
+			ang = heading - Utils.r.nextDouble() * Math.PI / 8;
 		return ang;
 	}
 

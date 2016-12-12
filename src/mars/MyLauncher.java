@@ -64,7 +64,9 @@ public class MyLauncher extends RepastSLauncher {
 		agents.clear();
 		Entity.clearEntities();
 		Parameters p = RunEnvironment.getInstance().getParameters();
-
+		
+		Utils.r.setSeed((Integer) p.getValue("randomSeed"));
+		
 		int xdim = (Integer) p.getValue("xdim"); // The x dimension of the
 													// physical space
 		int ydim = (Integer) p.getValue("ydim"); // The y dimension of the
