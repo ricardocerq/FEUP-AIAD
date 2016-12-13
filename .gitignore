@@ -2,3 +2,4 @@ bin/*
 *.log
 *.log.1
 /bin/
+/output/

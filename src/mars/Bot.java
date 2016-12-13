@@ -429,7 +429,8 @@ public abstract class Bot extends Entity {
 				throws FailureException {
 			numMessagesReceived++;
 			DepositProposalResponse response = null;
-			System.out.println("#" + id + " : my proposal was accepted");
+			if(!RunEnvironment.getInstance().isBatch())
+				System.out.println("#" + id + " : my proposal was accepted");
 			try {
 				response = (DepositProposalResponse) getContentManager().extractContent(accept);
 			} catch (CodecException | OntologyException e) {
@@ -483,10 +484,12 @@ public abstract class Bot extends Entity {
 			if (failure.getSender().equals(myAgent.getAMS())) {
 				// FAILURE notification from the JADE runtime: the receiver
 				// does not exist
-				System.out.println("Responder does not exist");
+				if(!RunEnvironment.getInstance().isBatch())
+					System.out.println("Responder does not exist");
 			} else {
 				numMessagesReceived++;
-				System.out.println("Agent " + failure.getSender().getName() + " failed");
+				if(!RunEnvironment.getInstance().isBatch())
+					System.out.println("Agent " + failure.getSender().getName() + " failed");
 			}
 		}
 		@Override
@@ -562,7 +565,9 @@ public abstract class Bot extends Entity {
 				}
 				numSpotters++;
 				elem.getValue().setPerformative(ACLMessage.ACCEPT_PROPOSAL);
-				System.out.println("#" + id + " : accepting proposal, sending message");
+				
+				if(!RunEnvironment.getInstance().isBatch())
+					System.out.println("#" + id + " : accepting proposal, sending message");
 			}
 			int numProducers = 0;
 			for (Map.Entry<DepositProposal, ACLMessage> elem : proposalsExtract) {
@@ -571,7 +576,9 @@ public abstract class Bot extends Entity {
 				}
 				numProducers++;
 				elem.getValue().setPerformative(ACLMessage.ACCEPT_PROPOSAL);
-				System.out.println("#" + id + " : accepting proposal, sending message");
+				
+				if(!RunEnvironment.getInstance().isBatch())
+					System.out.println("#" + id + " : accepting proposal, sending message");
 			}
 			int numTransporters = 0;
 			for (Map.Entry<DepositProposal, ACLMessage> elem : proposalsTransport) {
@@ -585,7 +592,8 @@ public abstract class Bot extends Entity {
 		}
 
 		protected void handleInform(ACLMessage inform) {
-			System.out
+			if(!RunEnvironment.getInstance().isBatch())
+				System.out
 					.println("Agent " + inform.getSender().getName() + " successfully performed the requested action");
 			// retval = FINISHED_CONTRACT;
 		}
