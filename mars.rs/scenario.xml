@@ -7,4 +7,6 @@
 <repast.simphony.action.data_set context="mars" file="repast.simphony.action.data_set_1.xml" />
 <repast.simphony.action.time_series_chart context="mars" file="repast.simphony.action.chart_resources.xml" />
 <repast.simphony.action.time_series_chart context="mars" file="repast.simphony.action.chart_energy.xml" />
+<repast.simphony.action.time_series_chart context="mars" file="repast.simphony.action.chart_messages.xml" />
+<repast.simphony.action.file_sink context="mars" file="repast.simphony.action.file_sink_1.xml" />
 </Scenario>

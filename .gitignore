@@ -3,3 +3,4 @@ bin/*
 *.log.1
 /bin/
 /output/
+*.txt

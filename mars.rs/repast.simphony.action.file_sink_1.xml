@@ -1,0 +1,14 @@
+<repast.simphony.data2.engine.FileSinkDescriptor>
+  <name>File Sink 1</name>
+  <dataSet>Data Set 1</dataSet>
+  <delimiter>,</delimiter>
+  <format>TABULAR</format>
+  <sourceIds class="linked-hash-set">
+    <string>Resources Gathered</string>
+    <string>Total Energy</string>
+    <string>Total Messages</string>
+    <string>tick</string>
+  </sourceIds>
+  <fileName>FileSink1.txt</fileName>
+  <addTimeStamp>true</addTimeStamp>
+</repast.simphony.data2.engine.FileSinkDescriptor>
