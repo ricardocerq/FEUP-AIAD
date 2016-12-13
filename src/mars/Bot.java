@@ -36,6 +36,7 @@ import onto.DepositProposalResponse;
 import onto.MarsOntology;
 import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunEnvironment;
+import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.grid.Grid;
 import sajas.core.Agent;
@@ -69,7 +70,7 @@ public abstract class Bot extends Entity {
 	private double explorationDirection = 0;
 	private boolean disabled = false;
 	private int ticksToEnabled = 0;
-
+	private int numMessagesReceived = 0;
 	private void setMineralTimer(Mineral m) {
 		mineralTimers.put(m, EntityGlobals.getMineralTimerValue());
 	}
@@ -382,6 +383,7 @@ public abstract class Bot extends Entity {
 
 		@Override
 		protected ACLMessage handleCfp(ACLMessage cfp) throws NotUnderstoodException, RefuseException {
+			numMessagesReceived++;
 			if (disabled) {
 				throw new jade.domain.FIPAAgentManagement.NotUnderstoodException("Bot is disabled");
 			}
@@ -425,6 +427,7 @@ public abstract class Bot extends Entity {
 		@Override
 		protected ACLMessage handleAcceptProposal(ACLMessage cfp, ACLMessage propose, ACLMessage accept)
 				throws FailureException {
+			numMessagesReceived++;
 			DepositProposalResponse response = null;
 			System.out.println("#" + id + " : my proposal was accepted");
 			try {
@@ -440,6 +443,7 @@ public abstract class Bot extends Entity {
 		}
 
 		protected void handleRejectProposal(ACLMessage cfp, ACLMessage propose, ACLMessage reject) {
+			numMessagesReceived++;
 			if(!RunEnvironment.getInstance().isBatch())
 				System.out.println("Agent " + getLocalName() + ": Proposal rejected");
 		}
@@ -464,11 +468,13 @@ public abstract class Bot extends Entity {
 
 		@SuppressWarnings("rawtypes")
 		protected void handlePropose(ACLMessage propose, Vector v) {
+			numMessagesReceived++;
 			// System.out.println("Agent "+propose.getSender().getName()+"
 			// proposed ");
 		}
 
 		protected void handleRefuse(ACLMessage refuse) {
+			numMessagesReceived++;
 			// System.out.println("Agent "+refuse.getSender().getName()+"
 			// refused");
 		}
@@ -479,8 +485,14 @@ public abstract class Bot extends Entity {
 				// does not exist
 				System.out.println("Responder does not exist");
 			} else {
+				numMessagesReceived++;
 				System.out.println("Agent " + failure.getSender().getName() + " failed");
 			}
+		}
+		@Override
+		protected void handleNotUnderstood(ACLMessage notUnderstood) {
+			super.handleNotUnderstood(notUnderstood);
+			numMessagesReceived++;
 		}
 
 		@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -916,4 +928,16 @@ public abstract class Bot extends Entity {
 	protected abstract int canInteract(DepositFact min);
 	
 	protected abstract int getInteractionSpeed();
+
+	public int getNumMessagesReceived() {
+		return numMessagesReceived;
+	}
+
+	public void setNumMessagesReceived(int numMessagesReceived) {
+		this.numMessagesReceived = numMessagesReceived;
+	}
+	@ScheduledMethod(start = 1, interval = 500)
+	public void resetNumMessages(){
+		numMessagesReceived = 0;
+	}
 }
