@@ -1,3 +1,1 @@
-<?xml version="1.0"?>
-<sweep runs="1">
-</sweep>
+<?xml version="1.0" ?><sweep runs="1"><parameter name="maxtransporterscontracted" type="constant" constant_type="int" value="3"></parameter><parameter name="explorationsubdivisions" type="constant" constant_type="int" value="50"></parameter><parameter name="maxspeed" type="constant" constant_type="double" value="0.05"></parameter><parameter name="breakprobability" type="constant" constant_type="double" value="0.001"></parameter></sweep>

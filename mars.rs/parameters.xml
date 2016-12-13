@@ -111,14 +111,14 @@
 		converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" />
 		
 	<parameter name="decide_traveling_energy" displayName="discard cfp if not enough energy (traveling)"
-		type="boolean" defaultValue="true" isReadOnly="false"
-		converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter" />
+		type="int" defaultValue="1" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
 	<parameter name="decide_working_energy" displayName="discard cfp if not enough energy (working)"
-		type="boolean" defaultValue="false" isReadOnly="false"
-		converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter" />
+		type="int" defaultValue="0" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
 	<parameter name="decide_capacity" displayName="cost: discard if not enough capacity"
-		type="boolean" defaultValue="false" isReadOnly="false"
-		converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter" />
+		type="int" defaultValue="0" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
 	
 	
 	

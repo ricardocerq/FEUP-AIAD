@@ -165,13 +165,13 @@ public class MyLauncher extends RepastSLauncher {
 		double costCarrying = p.getDouble("cost_carrying");
 		EntityGlobals.setCostCarrying(costCarrying);
 		
-		boolean decideTravelingEnergy = (Boolean) p.getValue("decide_traveling_energy");
+		boolean decideTravelingEnergy =((Integer) p.getValue("decide_traveling_energy")) != 0;
 		EntityGlobals.setDecideTravelingEnergy(decideTravelingEnergy);
 		
-		boolean decideWorkingEnergy = (Boolean) p.getValue("decide_working_energy");
+		boolean decideWorkingEnergy = ((Integer) p.getValue("decide_working_energy")) != 0;
 		EntityGlobals.setDecideWorkingEnergy(decideWorkingEnergy);
 		
-		boolean decideCapacity = (Boolean) p.getValue("decide_capacity");
+		boolean decideCapacity = ((Integer) p.getValue("decide_capacity")) != 0;
 		EntityGlobals.setDecideCapacity(decideCapacity);
 		
 		Grid<Object> grid = GridFactoryFinder.createGridFactory(null).createGrid("Simple Grid", context,
