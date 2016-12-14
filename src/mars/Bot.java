@@ -71,6 +71,8 @@ public abstract class Bot extends Entity {
 	private boolean disabled = false;
 	private int ticksToEnabled = 0;
 	private int numMessagesReceived = 0;
+	private int prevnumMessagesReceived = 0;
+	private double messagesPerTick = 0;
 	private void setMineralTimer(Mineral m) {
 		mineralTimers.put(m, EntityGlobals.getMineralTimerValue());
 	}
@@ -937,15 +939,17 @@ public abstract class Bot extends Entity {
 	
 	protected abstract int getInteractionSpeed();
 
-	public int getNumMessagesReceived() {
-		return numMessagesReceived;
+	public double getNumMessagesReceived() {
+		return messagesPerTick;
 	}
 
 	public void setNumMessagesReceived(int numMessagesReceived) {
 		this.numMessagesReceived = numMessagesReceived;
 	}
-	@ScheduledMethod(start = 1, interval = 500)
+	@ScheduledMethod(start = 1, interval = 1)
 	public void resetNumMessages(){
-		numMessagesReceived = 0;
+		messagesPerTick = ((double)numMessagesReceived-prevnumMessagesReceived);
+		
+		prevnumMessagesReceived = numMessagesReceived;
 	}
 }
