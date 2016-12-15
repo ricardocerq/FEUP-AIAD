@@ -73,6 +73,8 @@ public abstract class Bot extends Entity {
 	private int numMessagesReceived = 0;
 	private int prevnumMessagesReceived = 0;
 	private double messagesPerTick = 0;
+	private double totalEnergySpent = 0;
+	
 	private void setMineralTimer(Mineral m) {
 		mineralTimers.put(m, EntityGlobals.getMineralTimerValue());
 	}
@@ -775,9 +777,11 @@ public abstract class Bot extends Entity {
 		int ret = canInteract(m);
 		if (ret == 0)
 			return 0;
+		double currEn = energy;
 		this.energy -= EntityGlobals.getPassiveDischarge();
 		if (energy < 0)
 			energy = 0;
+		totalEnergySpent += currEn - energy;
 		return ret;
 	}
 
@@ -792,9 +796,11 @@ public abstract class Bot extends Entity {
 
 	@Override
 	protected void onMove(double dist) {
+		double currEn = energy;
 		energy -= dist;
 		if (energy < 0)
 			energy = 0;
+		totalEnergySpent += currEn - energy;
 	}
 
 	@Override
@@ -956,5 +962,9 @@ public abstract class Bot extends Entity {
 		messagesPerTick = ((double)numMessagesReceived-prevnumMessagesReceived);
 		
 		prevnumMessagesReceived = numMessagesReceived;
+	}
+	
+	public double getTotalEnergySpent(){
+		return totalEnergySpent;
 	}
 }

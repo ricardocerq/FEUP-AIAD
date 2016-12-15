@@ -4,10 +4,10 @@
   <delimiter>,</delimiter>
   <format>TABULAR</format>
   <sourceIds class="linked-hash-set">
-    <string>Resources Percentage Gathered</string>
-    <string>Total Energy</string>
-    <string>Total Messages</string>
     <string>tick</string>
+    <string>Percentage of Resources Gathered</string>
+    <string>Total Energy Spent</string>
+    <string>Total Messages</string>
   </sourceIds>
   <fileName>FileSink1.txt</fileName>
   <addTimeStamp>true</addTimeStamp>
