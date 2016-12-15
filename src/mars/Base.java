@@ -1,6 +1,8 @@
 package mars;
 
 import repast.simphony.context.Context;
+import repast.simphony.engine.environment.RunEnvironment;
+import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.grid.Grid;
 
@@ -24,6 +26,10 @@ public class Base extends Entity {
 	public int getGathered() {
 		return gathered;
 	}
+	
+	public double getPercentageGathered() {
+		return ((double)gathered)/Mineral.getGlobalTotal();
+	}
 
 	public void setGathered(int gathered) {
 		this.gathered = gathered;
@@ -31,5 +37,11 @@ public class Base extends Entity {
 
 	public void addMineral(int amount) {
 		gathered += amount;
+	}
+	@ScheduledMethod(start = 1, interval = 1)
+	public void stop(){
+		if(gathered == Mineral.getGlobalTotal()){
+			RunEnvironment.getInstance().endRun();
+		}
 	}
 }
