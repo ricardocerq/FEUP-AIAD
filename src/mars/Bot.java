@@ -589,7 +589,8 @@ public abstract class Bot extends Entity {
 				}
 				numTransporters++;
 				elem.getValue().setPerformative(ACLMessage.ACCEPT_PROPOSAL);
-				System.out.println("#" + id + " : accepting proposal, sending message");
+				if(!RunEnvironment.getInstance().isBatch())
+					System.out.println("#" + id + " : accepting proposal, sending message");
 			}
 		}
 
@@ -940,6 +941,10 @@ public abstract class Bot extends Entity {
 	protected abstract int getInteractionSpeed();
 
 	public double getNumMessagesReceived() {
+		return numMessagesReceived;
+	}
+	
+	public double getNumMessagesPerTick() {
 		return messagesPerTick;
 	}
 
