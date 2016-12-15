@@ -4,3 +4,4 @@ bin/*
 /bin/
 /output/
 *.txt
+/batch/batch_params.xml
