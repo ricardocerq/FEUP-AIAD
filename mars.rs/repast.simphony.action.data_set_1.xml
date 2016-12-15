@@ -20,7 +20,7 @@
 			<repast.simphony.data2.engine.MethodDataSourceDefinition>
 				<id>Resources Percentage Gathered</id>
 				<className>mars.Base</className>
-				<methodName>getGathered</methodName>
+				<methodName>getPercentageGathered</methodName>
 				<aggType>SUM</aggType>
 			</repast.simphony.data2.engine.MethodDataSourceDefinition>
 		</entry>
@@ -39,6 +39,15 @@
 				<id>Total Messages</id>
 				<className>mars.Bot</className>
 				<methodName>getNumMessagesReceived</methodName>
+				<aggType>SUM</aggType>
+			</repast.simphony.data2.engine.MethodDataSourceDefinition>
+		</entry>
+		<entry>
+			<string>Mineral Total</string>
+			<repast.simphony.data2.engine.MethodDataSourceDefinition>
+				<id>Mineral Total</id>
+				<className>mars.Mineral</className>
+				<methodName>getGlobalTotal</methodName>
 				<aggType>SUM</aggType>
 			</repast.simphony.data2.engine.MethodDataSourceDefinition>
 		</entry>

@@ -7,6 +7,7 @@
     <string>Resources Percentage Gathered</string>
     <string>Total Energy</string>
     <string>Total Messages</string>
+    <string>Mineral Total</string>
     <string>tick</string>
   </sourceIds>
   <fileName>FileSink1.txt</fileName>
