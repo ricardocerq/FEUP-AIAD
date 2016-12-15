@@ -1,9 +1,9 @@
 <repast.simphony.chart2.engine.TimeSeriesChartDescriptor>
-	<name>Resources</name>
+	<name>Energy</name>
 	<dataSet>Data Set 1</dataSet>
 	<xAxisLabel>Time</xAxisLabel>
-	<yAxisLabel>Resources</yAxisLabel>
-	<chartTitle>Resources</chartTitle>
+	<yAxisLabel>Energy</yAxisLabel>
+	<chartTitle>Energy</chartTitle>
 	<type>TIME_SERIES</type>
 	<background>
 		<red>192</red>
@@ -21,9 +21,9 @@
 	<showLegend>true</showLegend>
 	<seriesIds>
 		<entry>
-			<string>Resources Gathered</string>
+			<string>Total Energy</string>
 			<SeriesData>
-				<label>Resources Gathered</label>
+				<label>Total Energy</label>
 				<color>
 					<red>0</red>
 					<green>0</green>

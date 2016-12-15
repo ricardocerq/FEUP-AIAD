@@ -4,7 +4,7 @@
   <delimiter>,</delimiter>
   <format>TABULAR</format>
   <sourceIds class="linked-hash-set">
-    <string>Resources Gathered</string>
+    <string>Resources Percentage Gathered</string>
     <string>Total Energy</string>
     <string>Total Messages</string>
     <string>tick</string>

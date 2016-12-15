@@ -16,9 +16,9 @@
 	<atEnd>false</atEnd>
 	<methodDataSources class="linked-hash-map">
 		<entry>
-			<string>Resources Gathered</string>
+			<string>Resources Percentage Gathered</string>
 			<repast.simphony.data2.engine.MethodDataSourceDefinition>
-				<id>Resources Gathered</id>
+				<id>Resources Percentage Gathered</id>
 				<className>mars.Base</className>
 				<methodName>getGathered</methodName>
 				<aggType>SUM</aggType>
