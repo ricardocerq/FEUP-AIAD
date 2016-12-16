@@ -2,8 +2,8 @@
   <name>Messages</name>
   <dataSet>Data Set 1</dataSet>
   <xAxisLabel>Time</xAxisLabel>
-  <yAxisLabel>Messages</yAxisLabel>
-  <chartTitle>Messages</chartTitle>
+  <yAxisLabel>Total Messages</yAxisLabel>
+  <chartTitle>Total Messages</chartTitle>
   <type>TIME_SERIES</type>
   <background>
     <red>192</red>

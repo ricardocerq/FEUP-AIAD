@@ -21,9 +21,9 @@
   <showLegend>true</showLegend>
   <seriesIds>
     <entry>
-      <string>Total Energy</string>
+      <string>Total Energy Spent</string>
       <SeriesData>
-        <label>Total Energy</label>
+        <label>Total Energy Spent</label>
         <color>
           <red>0</red>
           <green>0</green>

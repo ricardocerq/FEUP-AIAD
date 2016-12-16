@@ -21,9 +21,9 @@
   <showLegend>true</showLegend>
   <seriesIds>
     <entry>
-      <string>Resources Percentage Gathered</string>
+      <string>Percentage of Resources Gathered</string>
       <SeriesData>
-        <label>Resources Percentage Gathered</label>
+        <label>Percentage of Resources Gathered</label>
         <color>
           <red>0</red>
           <green>0</green>
