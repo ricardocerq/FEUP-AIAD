@@ -169,8 +169,9 @@ public abstract class Bot extends Entity {
 		public void action() {
 			if (disabled) {
 				ticksToEnabled--;
-				if (ticksToEnabled == 0) {
+				if (ticksToEnabled <= 0) {
 					disabled = false;
+					ticksToEnabled = 0;
 				}
 				return;
 			} else {
